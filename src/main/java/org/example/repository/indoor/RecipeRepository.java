@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RecipeRepository extends JpaRepository<Recipe, Long> {
-    List<Recipe> findByCategoryId(Long categoryId);
+public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
+    List<Recipe> findByCategoryId(Integer categoryId);
     List<Recipe> findByDifficulty(String difficulty);
-    List<Recipe> findByCategoryIdAndDifficulty(Long categoryId, String difficulty);
+    List<Recipe> findByCategoryIdAndDifficulty(Integer categoryId, String difficulty);
 }

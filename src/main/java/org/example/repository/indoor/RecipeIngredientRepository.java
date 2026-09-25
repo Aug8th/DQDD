@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RecipeIngredientRepository extends JpaRepository<RecipeIngredient, Long> {
-    List<RecipeIngredient> findByRecipeId(Long recipeId);
+public interface RecipeIngredientRepository extends JpaRepository<RecipeIngredient, Integer> {
+    List<RecipeIngredient> findByRecipeId(Integer recipeId);
 }
