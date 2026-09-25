@@ -118,3 +118,18 @@ CREATE TABLE wheel_items (
 );
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+--update db:
+USE food_app;
+
+ALTER TABLE users
+    ADD COLUMN avatar_url VARCHAR(500) NULL;
+
+ALTER TABLE recipes
+    ADD COLUMN image_url VARCHAR(500) NULL,
+    ADD COLUMN submitted_by_user_id INT NULL,
+    ADD COLUMN approval_status ENUM('pending', 'approved', 'rejected')
+        NOT NULL DEFAULT 'approved',
+    ADD CONSTRAINT fk_recipes_submitter
+        FOREIGN KEY (submitted_by_user_id)
+        REFERENCES users(id) ON DELETE SET NULL;
