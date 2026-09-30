@@ -1,6 +1,7 @@
 package org.example.entity.outdoor;
 
 import jakarta.persistence.*;
+import org.example.enums.WheelType;
 
 import java.util.ArrayList;
 import java.util.List;

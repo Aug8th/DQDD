@@ -2,7 +2,7 @@ package org.example.controller;
 
 import org.example.entity.outdoor.CustomWheel;
 import org.example.entity.outdoor.WheelItem;
-import org.example.entity.outdoor.WheelType;
+import org.example.enums.WheelType;
 import org.example.service.outdoor.WheelService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

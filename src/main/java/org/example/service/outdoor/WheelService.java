@@ -2,7 +2,7 @@ package org.example.service.outdoor;
 
 import org.example.entity.outdoor.CustomWheel;
 import org.example.entity.outdoor.WheelItem;
-import org.example.entity.outdoor.WheelType;
+import org.example.enums.WheelType;
 import org.example.repository.outdoor.CustomWheelRepository;
 import org.example.repository.outdoor.WheelItemRepository;
 import org.springframework.stereotype.Service;
