@@ -3,6 +3,10 @@ package org.example.repository.outdoor;
 import org.example.entity.outdoor.CustomWheel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CustomWheelRepository extends JpaRepository<CustomWheel, Integer> {
+import java.util.List;
 
+public interface CustomWheelRepository
+        extends JpaRepository<CustomWheel, Integer> {
+
+    List<CustomWheel> findByUserId(Integer userId);
 }

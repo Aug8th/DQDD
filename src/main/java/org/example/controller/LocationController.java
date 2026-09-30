@@ -1,66 +1,62 @@
 package org.example.controller;
 
-
 import org.example.entity.outdoor.Location;
-import org.example.repository.outdoor.LocationRepository;
-
+import org.example.service.outdoor.LocationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/locations")
+@RequestMapping("/api/outdoor/locations")
 public class LocationController {
 
-    private final LocationRepository locationRepository;
+    private final LocationService locationService;
 
+    // Constructor injection
     public LocationController(
-            LocationRepository locationRepository) {
-
-        this.locationRepository = locationRepository;
-    }
-
-    // GET ALL LOCATIONS
-
-
-    @GetMapping
-    public ResponseEntity<List<Location>> getAllLocations() {
-
-        return ResponseEntity.ok(
-                locationRepository.findAll()
-        );
+            LocationService locationService
+    ) {
+        this.locationService = locationService;
     }
 
 
-    // SEARCH BY AREA
+    // GET LOCATIONS BY FOOD
 
-
-    @GetMapping(params = "area")
-    public ResponseEntity<List<Location>> getLocationsByArea(
-            @RequestParam String area) {
+    @GetMapping("/food/{foodId}")
+    public ResponseEntity<List<Location>> getByFood(
+            @PathVariable Integer foodId
+    ) {
 
         List<Location> locations =
-                locationRepository
-                        .findByAddressContainingIgnoreCase(area);
+                locationService.getLocationsByFood(foodId);
+
+        return ResponseEntity.ok(locations);
+    }
+
+    // SEARCH LOCATION BY NAME
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Location>> search(
+            @RequestParam String name
+    ) {
+
+        List<Location> locations =
+                locationService.searchByName(name);
 
         return ResponseEntity.ok(locations);
     }
 
     // GET LOCATION BY ID
 
-
     @GetMapping("/{id}")
-    public ResponseEntity<?> getLocationById(
-            @PathVariable Integer id) {
+    public ResponseEntity<Location> getById(
+            @PathVariable Integer id
+    ) {
 
-        return locationRepository
-                .findById(id)
-                .map(location ->
-                        ResponseEntity.ok(location)
-                )
-                .orElseGet(() ->
-                        ResponseEntity.notFound().build()
-                );
+        Location location =
+                locationService.getLocation(id);
+
+        return ResponseEntity.ok(location);
     }
 }

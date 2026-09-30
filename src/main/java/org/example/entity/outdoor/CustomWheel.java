@@ -1,6 +1,7 @@
 package org.example.entity.outdoor;
 
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +16,9 @@ public class CustomWheel {
     @Column(name = "user_id", nullable = false)
     private Integer userId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "wheel_type", nullable = false)
-    private String wheelType;
+    private WheelType wheelType;
 
     @Column(length = 255)
     private String name;
@@ -28,21 +30,22 @@ public class CustomWheel {
     )
     private List<WheelItem> items = new ArrayList<>();
 
-    // No-Args Constructor
     public CustomWheel() {
     }
 
-    // All-Args Constructor
-    public CustomWheel(Integer id, Integer userId, String wheelType,
-                       String name, List<WheelItem> items) {
+    public CustomWheel(
+            Integer id,
+            Integer userId,
+            WheelType wheelType,
+            String name,
+            List<WheelItem> items
+    ) {
         this.id = id;
         this.userId = userId;
         this.wheelType = wheelType;
         this.name = name;
         this.items = items;
     }
-
-    // Getters and Setters
 
     public Integer getId() {
         return id;
@@ -60,11 +63,11 @@ public class CustomWheel {
         this.userId = userId;
     }
 
-    public String getWheelType() {
+    public WheelType getWheelType() {
         return wheelType;
     }
 
-    public void setWheelType(String wheelType) {
+    public void setWheelType(WheelType wheelType) {
         this.wheelType = wheelType;
     }
 

@@ -1,72 +1,176 @@
 package org.example.service.outdoor;
 
-
 import org.example.entity.outdoor.CustomWheel;
 import org.example.entity.outdoor.WheelItem;
+import org.example.entity.outdoor.WheelType;
 import org.example.repository.outdoor.CustomWheelRepository;
 import org.example.repository.outdoor.WheelItemRepository;
 import org.springframework.stereotype.Service;
-import org.example.service.outdoor.WheelService;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
 public class WheelService {
 
-    private final CustomWheelRepository customWheelRepository;
-    private final WheelItemRepository wheelItemRepository;
-    private final WheelService wheelService;
+    private final CustomWheelRepository wheelRepository;
+    private final WheelItemRepository itemRepository;
 
-    private final Random random = new Random();
-
+    // Constructor injection
     public WheelService(
-            CustomWheelRepository customWheelRepository,
-            WheelItemRepository wheelItemRepository, WheelService wheelService) {
-
-        this.customWheelRepository = customWheelRepository;
-        this.wheelItemRepository = wheelItemRepository;
-        this.wheelService = wheelService;
+            CustomWheelRepository wheelRepository,
+            WheelItemRepository itemRepository
+    ) {
+        this.wheelRepository = wheelRepository;
+        this.itemRepository = itemRepository;
     }
 
-    // RANDOM SPIN
+    // ==========================================
+    // CREATE WHEEL
+    // ==========================================
 
-    public WheelItem spinWheel(Integer wheelId) {
+    public CustomWheel createWheel(
+            Integer userId,
+            String name,
+            WheelType wheelType
+    ) {
 
-        // Find wheel
-        Optional<CustomWheel> wheel =
-                customWheelRepository.findById(wheelId);
+        CustomWheel wheel = new CustomWheel();
 
-        if (wheel.isEmpty()) {
-            throw new RuntimeException("Wheel not found");
+        wheel.setUserId(userId);
+        wheel.setName(name);
+        wheel.setWheelType(wheelType);
+
+        return wheelRepository.save(wheel);
+    }
+
+    // ==========================================
+    // GET WHEEL
+    // ==========================================
+
+    public CustomWheel getWheel(Integer wheelId) {
+
+        return wheelRepository.findById(wheelId)
+                .orElseThrow(() ->
+                        new RuntimeException("Wheel not found")
+                );
+    }
+
+    // ==========================================
+    // GET USER'S WHEELS
+    // ==========================================
+
+    public List<CustomWheel> getUserWheels(Integer userId) {
+
+        return wheelRepository.findByUserId(userId);
+    }
+
+    // ==========================================
+    // ADD ITEM
+    // ==========================================
+
+    public WheelItem addItem(
+            Integer wheelId,
+            String itemName
+    ) {
+
+        CustomWheel wheel = getWheel(wheelId);
+
+        WheelItem item = new WheelItem();
+
+        item.setWheel(wheel);
+        item.setItemName(itemName);
+        item.setIsExcluded(false);
+
+        return itemRepository.save(item);
+    }
+
+    // ==========================================
+    // UPDATE ITEM
+    // ==========================================
+
+    public WheelItem updateItem(
+            Integer wheelId,
+            Integer itemId,
+            String itemName,
+            Boolean isExcluded
+    ) {
+
+        WheelItem item = itemRepository.findById(itemId)
+                .orElseThrow(() ->
+                        new RuntimeException("Item not found")
+                );
+
+        // Make sure this item belongs to this wheel
+        if (!item.getWheel().getId().equals(wheelId)) {
+            throw new RuntimeException(
+                    "Item does not belong to this wheel"
+            );
         }
 
-        // Get all items of this wheel
-        List<WheelItem> items =
-                wheelItemRepository.findAll()
-                        .stream()
-                        .filter(item ->
-                                item.getWheel()
-                                        .getId()
-                                        .equals(wheelId))
-                        .filter(item ->
-                                !Boolean.TRUE.equals(
-                                        item.getIsExcluded()
-                                ))
-                        .toList();
+        item.setItemName(itemName);
 
-        // No available items
-        if (items.isEmpty()) {
+        if (isExcluded != null) {
+            item.setIsExcluded(isExcluded);
+        }
+
+        return itemRepository.save(item);
+    }
+
+    // ==========================================
+    // DELETE ITEM
+    // ==========================================
+
+    public void deleteItem(
+            Integer wheelId,
+            Integer itemId
+    ) {
+
+        WheelItem item = itemRepository.findById(itemId)
+                .orElseThrow(() ->
+                        new RuntimeException("Item not found")
+                );
+
+        // Make sure this item belongs to this wheel
+        if (!item.getWheel().getId().equals(wheelId)) {
+            throw new RuntimeException(
+                    "Item does not belong to this wheel"
+            );
+        }
+
+        itemRepository.delete(item);
+    }
+
+    // ==========================================
+    // RANDOM SPIN
+    // ==========================================
+
+    public WheelItem spin(Integer wheelId) {
+
+        // Get all items
+        List<WheelItem> items =
+                itemRepository.findByWheelId(wheelId);
+
+        // Remove excluded items
+        List<WheelItem> availableItems = items.stream()
+                .filter(item ->
+                        !Boolean.TRUE.equals(item.getIsExcluded())
+                )
+                .toList();
+
+        // No items available
+        if (availableItems.isEmpty()) {
             throw new RuntimeException(
                     "No available items in this wheel"
             );
         }
 
-        // Random
-        int randomIndex =
-                random.nextInt(items.size());
+        // Random item
+        Random random = new Random();
 
-        return items.get(randomIndex);
+        int randomIndex =
+                random.nextInt(availableItems.size());
+
+        return availableItems.get(randomIndex);
     }
 }
