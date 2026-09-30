@@ -10,11 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/wheels")
+@RequestMapping("/api/custom-wheel")
 public class WheelController {
 
     private final CustomWheelRepository customWheelRepository;
@@ -235,5 +236,38 @@ public class WheelController {
                     .badRequest()
                     .body(e.getMessage());
         }
+    }
+
+
+    //search
+
+    @PostMapping("/spin")
+    public ResponseEntity<?> spinCustomWheel(
+            @RequestBody List<String> items) {
+
+        if (items == null || items.isEmpty()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Danh sách món ăn không được để trống");
+        }
+
+        // Loại bỏ item rỗng
+        List<String> validItems = items.stream()
+                .filter(item -> item != null)
+                .map(String::trim)
+                .filter(item -> !item.isEmpty())
+                .toList();
+
+        if (validItems.isEmpty()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Danh sách không có món ăn hợp lệ");
+        }
+
+        Collections.shuffle(validItems);
+
+        String result = validItems.get(0);
+
+        return ResponseEntity.ok(result);
     }
 }
