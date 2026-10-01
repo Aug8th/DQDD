@@ -9,6 +9,7 @@ import org.example.mapper.indoor.UserFridgeMapper;
 import org.example.repository.indoor.UserFridgeRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +22,20 @@ public class UserFridgeService {
     private final UserFridgeRepository userFridgeRepository;
     private final UserFridgeMapper userFridgeMapper;
 
-    // 1. Hiển thị danh sách nguyên liệu (Tự động quét, xóa đồ quá hạn và tạo thông báo)
+    // 0. Overload: Gọi chỉ với userId
     public UserFridgeListResponseDto getItemsByUser(Integer userId) {
-        List<UserFridge> fridges = userFridgeRepository.findByUserId(userId);
+        return getItemsByUser(userId, null);
+    }
+
+    // 1. Hiển thị danh sách nguyên liệu (Có hỗ trợ lọc theo storageType, tự động quét và xóa đồ quá hạn)
+    public UserFridgeListResponseDto getItemsByUser(Integer userId, UserFridge.StorageType storageType) {
+        List<UserFridge> fridges;
+        if (storageType != null) {
+            fridges = userFridgeRepository.findByUserIdAndStorageType(userId, storageType);
+        } else {
+            fridges = userFridgeRepository.findByUserId(userId);
+        }
+
         LocalDate today = LocalDate.now();
 
         List<UserFridge> expiredItems = new ArrayList<>();
@@ -66,7 +78,7 @@ public class UserFridgeService {
         return response;
     }
 
-    // 2. Thêm nguyên liệu (Đã có sẵn validate hạn sử dụng > ngày mua)
+    // 2. Thêm nguyên liệu (Validate hạn sử dụng > ngày mua, mặc định COOLER nếu thiếu)
     public UserFridgeResponseDto addFridgeItem(UserFridgeRequestDto requestDto) {
         LocalDate purchaseDate = requestDto.getPurchaseDate();
         LocalDate expiryDate = requestDto.getExpiryDate();
@@ -78,6 +90,10 @@ public class UserFridgeService {
         }
 
         UserFridge fridge = userFridgeMapper.toEntity(requestDto);
+        if (fridge.getStorageType() == null) {
+            fridge.setStorageType(UserFridge.StorageType.COOLER);
+        }
+
         UserFridge saved = userFridgeRepository.save(fridge);
         return userFridgeMapper.toResponseDto(saved);
     }
@@ -89,7 +105,7 @@ public class UserFridgeService {
         userFridgeRepository.delete(existingFridge);
     }
 
-    // 4. Sửa nguyên liệu
+    // 5. Sửa nguyên liệu (Tự động xóa nếu quantity cập nhật về <= 0)
     public UserFridgeResponseDto updateFridgeItem(Integer id, UserFridgeRequestDto requestDto) {
         UserFridge existingFridge = userFridgeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy nguyên liệu nhé!"));
@@ -106,14 +122,30 @@ public class UserFridgeService {
         if (requestDto.getIngredientName() != null) {
             existingFridge.setIngredientName(requestDto.getIngredientName());
         }
+
+        // Cập nhật số lượng và kiểm tra nếu dùng hết sạch (<= 0)
+        if (requestDto.getQuantity() != null) {
+            if (requestDto.getQuantity().compareTo(BigDecimal.ZERO) <= 0) {
+                userFridgeRepository.delete(existingFridge);
+                throw new RuntimeException("Số lượng đã hết (<= 0), nguyên liệu đã được tự động xóa khỏi tủ lạnh!");
+            }
+            existingFridge.setQuantity(requestDto.getQuantity());
+        }
+
+        if (requestDto.getUnit() != null) {
+            existingFridge.setUnit(requestDto.getUnit());
+        }
         if (requestDto.getPurchaseDate() != null) {
             existingFridge.setPurchaseDate(requestDto.getPurchaseDate());
         }
         if (requestDto.getExpiryDate() != null) {
             existingFridge.setExpiryDate(requestDto.getExpiryDate());
         }
-        if (requestDto.getNotifiedFlag() != null) {
-            existingFridge.setNotifiedFlag(requestDto.getNotifiedFlag());
+        if (requestDto.getStorageType() != null) {
+            existingFridge.setStorageType(requestDto.getStorageType());
+        }
+        if (requestDto.getCategoryTag() != null) {
+            existingFridge.setCategoryTag(requestDto.getCategoryTag());
         }
 
         UserFridge updated = userFridgeRepository.save(existingFridge);

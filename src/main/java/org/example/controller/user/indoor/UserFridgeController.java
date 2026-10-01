@@ -2,8 +2,9 @@ package org.example.controller.user.indoor;
 
 import lombok.RequiredArgsConstructor;
 import org.example.dto.request.indoor.UserFridgeRequestDto;
-import org.example.dto.response.indoor.UserFridgeListResponseDto; // Import DTO mới
+import org.example.dto.response.indoor.UserFridgeListResponseDto;
 import org.example.dto.response.indoor.UserFridgeResponseDto;
+import org.example.entity.indoor.UserFridge;
 import org.example.service.indoor.UserFridgeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,47 +15,37 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserFridgeController {
 
-    private final UserFridgeService userFridgeService;
+    private final UserFridgeService userFridgesService;
 
-    // 1. API Hiển thị danh sách tủ lạnh (Tự động xóa đồ quá hạn và kèm thông báo)
+    // 1. API Hiển thị danh sách tủ lạnh (Có hỗ trợ lọc ?storageType=COOLER hoặc FREEZER)
     @GetMapping("/user/{userId}")
-    public ResponseEntity<UserFridgeListResponseDto> getFridgeByUser(@PathVariable Integer userId) {
-        UserFridgeListResponseDto response = userFridgeService.getItemsByUser(userId);
+    public ResponseEntity<UserFridgeListResponseDto> getFridgeByUser(
+            @PathVariable Integer userId,
+            @RequestParam(required = false) UserFridge.StorageType storageType) {
+        UserFridgeListResponseDto response = userFridgesService.getItemsByUser(userId, storageType);
         return ResponseEntity.ok(response);
     }
 
     // 2. API Thêm nguyên liệu
-    @PostMapping
-    public ResponseEntity<?> addFridgeItem(@RequestBody UserFridgeRequestDto requestDto) {
-        try {
-            UserFridgeResponseDto newItem = userFridgeService.addFridgeItem(requestDto);
-            return ResponseEntity.ok(newItem);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    @PostMapping({ "", "/" })
+    public ResponseEntity<UserFridgeResponseDto> addFridgeItem(@RequestBody UserFridgeRequestDto requestDto) {
+        UserFridgeResponseDto response = userFridgesService.addFridgeItem(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // 3. API Xóa nguyên liệu
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteFridgeItem(@PathVariable Integer id) {
-        try {
-            userFridgeService.deleteFridgeItem(id);
-            return ResponseEntity.ok("Xóa nguyên liệu thành công!");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
-    // 4. API Sửa nguyên liệu
+    // 3. API Sửa nguyên liệu
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateFridgeItem(
+    public ResponseEntity<UserFridgeResponseDto> updateFridgeItem(
             @PathVariable Integer id,
             @RequestBody UserFridgeRequestDto requestDto) {
-        try {
-            UserFridgeResponseDto updatedItem = userFridgeService.updateFridgeItem(id, requestDto);
-            return ResponseEntity.ok(updatedItem);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        UserFridgeResponseDto response = userFridgesService.updateFridgeItem(id, requestDto);
+        return ResponseEntity.ok(response);
+    }
+
+    // 4. API Xóa nguyên liệu
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteFridgeItem(@PathVariable Integer id) {
+        userFridgesService.deleteFridgeItem(id);
+        return ResponseEntity.ok("Xóa nguyên liệu thành công!");
     }
 }

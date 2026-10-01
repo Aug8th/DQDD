@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface UserFridgeRepository extends JpaRepository<UserFridge, Integer> {
     List<UserFridge> findByUserId(Integer userId);
+    List<UserFridge> findByUserIdAndStorageType(Integer userId, UserFridge.StorageType storageType);
 }

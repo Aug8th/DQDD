@@ -2,6 +2,7 @@ package org.example.controller.user.indoor;
 
 import org.example.dto.response.indoor.RecipeRecommendationResponseDto;
 import org.example.dto.response.indoor.RecipeResponseDto;
+import org.example.entity.indoor.Recipe;
 import org.example.service.indoor.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,31 @@ public class RecipeController {
         return ResponseEntity.ok(recipes);
     }
 
-    // 2. API Xem chi tiết một công thức
+    // 2. API Tìm kiếm & Bộ lọc đa tầng
+    // Ví dụ: GET /api/recipes/search?keyword=bò&dishType=MAIN_DISH&region=ASIAN
+    @GetMapping("/search")
+    public ResponseEntity<List<RecipeResponseDto>> searchRecipes(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Recipe.DishType dishType,
+            @RequestParam(required = false) Recipe.Region region,
+            @RequestParam(required = false) String country) {
+        List<RecipeResponseDto> recipes = recipeService.searchRecipes(keyword, dishType, region, country);
+        return ResponseEntity.ok(recipes);
+    }
+
+    // 3. API Random Dish - Chọn ngẫu nhiên 1 món ăn
+    // Ví dụ: GET /api/recipes/random
+    @GetMapping("/random")
+    public ResponseEntity<?> getRandomRecipe() {
+        try {
+            RecipeResponseDto recipe = recipeService.getRandomRecipe();
+            return ResponseEntity.ok(recipe);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    // 4. API Xem chi tiết một công thức
     @GetMapping("/{id}")
     public ResponseEntity<?> getRecipeDetail(@PathVariable Integer id) {
         try {
@@ -37,7 +62,7 @@ public class RecipeController {
         }
     }
 
-    // 3. API Thuật toán gợi ý món ăn
+    // 5. API Thuật toán gợi ý món ăn
     @GetMapping("/recommendations/{userId}")
     public ResponseEntity<?> recommendRecipes(@PathVariable Integer userId) {
         try {

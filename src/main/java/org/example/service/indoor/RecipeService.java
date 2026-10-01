@@ -53,7 +53,26 @@ public class RecipeService {
         return recipeMapper.toResponseDto(recipe);
     }
 
-    // 3. THUẬT TOÁN GỢI Ý MÓN ĂN TỪ TỦ LẠNH (Đã kiểm tra User tồn tại & Tủ lạnh rỗng)
+    // 3. Tìm kiếm và lọc đa tầng (Task 2.1)
+    public List<RecipeResponseDto> searchRecipes(
+            String keyword,
+            Recipe.DishType dishType,
+            Recipe.Region region,
+            String country) {
+        List<Recipe> recipes = recipeRepository.searchRecipes(keyword, dishType, region, country);
+        return recipes.stream()
+                .map(recipeMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    // 4. API Random Dish - Chọn ngẫu nhiên 1 món ăn từ database (Task 2.4)
+    public RecipeResponseDto getRandomRecipe() {
+        Recipe randomRecipe = recipeRepository.findRandomRecipe()
+                .orElseThrow(() -> new RuntimeException("Không có công thức nào trong cơ sở dữ liệu!"));
+        return recipeMapper.toResponseDto(randomRecipe);
+    }
+
+    // 5. THUẬT TOÁN GỢI Ý MÓN ĂN TỪ TỦ LẠNH (Đã kiểm tra User tồn tại & Tủ lạnh rỗng)
     public RecipeRecommendationResponseDto recommendRecipes(Integer userId) {
         // Kiểm tra xem User có thực sự tồn tại trong hệ thống hay không
         userRepository.findById(userId)

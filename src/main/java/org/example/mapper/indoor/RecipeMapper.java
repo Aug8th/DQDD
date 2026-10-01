@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class RecipeMapper {
 
     private final RecipeIngredientRepository recipeIngredientRepository;
+
     public RecipeResponseDto toResponseDto(Recipe recipe) {
         if (recipe == null) {
             return null;
@@ -30,6 +31,10 @@ public class RecipeMapper {
         dto.setDifficulty(recipe.getDifficulty());
         dto.setInstructions(recipe.getInstructions());
         dto.setVideoUrl(recipe.getVideoUrl());
+
+        dto.setDishType(recipe.getDishType());
+        dto.setRegion(recipe.getRegion());
+        dto.setCountry(recipe.getCountry());
 
         List<RecipeIngredient> ingredients = recipeIngredientRepository.findByRecipeId(recipe.getId());
         List<RecipeIngredientDto> ingredientDtos = ingredients.stream().map(i -> {

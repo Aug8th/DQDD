@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserFridge {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -19,8 +21,14 @@ public class UserFridge {
     @Column(name = "user_id", nullable = false)
     private Integer userId;
 
-    @Column(name = "ingredient_name", nullable = false, length = 150)
+    @Column(name = "ingredient_name", nullable = false)
     private String ingredientName;
+
+    @Column(name = "quantity")
+    private BigDecimal quantity = new BigDecimal("1.00");
+
+    @Column(name = "unit")
+    private String unit = "gram";
 
     @Column(name = "purchase_date", nullable = false)
     private LocalDate purchaseDate;
@@ -30,4 +38,15 @@ public class UserFridge {
 
     @Column(name = "notified_flag")
     private Boolean notifiedFlag = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "storage_type", nullable = false)
+    private StorageType storageType = StorageType.COOLER;
+
+    @Column(name = "category_tag")
+    private String categoryTag;
+
+    public enum StorageType {
+        COOLER, FREEZER
+    }
 }

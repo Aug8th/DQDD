@@ -42,5 +42,21 @@ public class Recipe {
 
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "dish_type")
+    private DishType dishType = DishType.MAIN_DISH;
+
+    @Enumerated(EnumType.STRING)
+    private Region region;
+
+    private String country;
+
+    public enum DishType {
+        MAIN_DISH, DRINK, DESSERT
+    }
+
+    public enum Region {
+        ASIAN, EUROPEAN
+    }
 
 }
