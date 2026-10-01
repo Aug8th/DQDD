@@ -21,9 +21,8 @@ public class WheelController {
         this.wheelService = wheelService;
     }
 
-    // ==========================================
-    // CREATE WHEEL
-    // ==========================================
+
+    // CREATE WHEEL=
 
     @PostMapping
     public ResponseEntity<CustomWheel> createWheel(
@@ -49,9 +48,8 @@ public class WheelController {
         return ResponseEntity.ok(wheel);
     }
 
-    // ==========================================
+
     // GET WHEEL
-    // ==========================================
 
     @GetMapping("/{wheelId}")
     public ResponseEntity<CustomWheel> getWheel(
@@ -63,9 +61,9 @@ public class WheelController {
         );
     }
 
-    // ==========================================
+
     // GET USER'S WHEELS
-    // ==========================================
+
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<CustomWheel>> getUserWheels(
@@ -77,9 +75,8 @@ public class WheelController {
         );
     }
 
-    // ==========================================
+
     // ADD ITEM
-    // ==========================================
 
     @PostMapping("/{wheelId}/items")
     public ResponseEntity<WheelItem> addItem(
@@ -97,9 +94,8 @@ public class WheelController {
         return ResponseEntity.ok(item);
     }
 
-    // ==========================================
     // UPDATE ITEM
-    // ==========================================
+
 
     @PutMapping("/{wheelId}/items/{itemId}")
     public ResponseEntity<WheelItem> updateItem(
@@ -130,9 +126,9 @@ public class WheelController {
         return ResponseEntity.ok(item);
     }
 
-    // ==========================================
+
     // DELETE ITEM
-    // ==========================================
+
 
     @DeleteMapping("/{wheelId}/items/{itemId}")
     public ResponseEntity<Void> deleteItem(
@@ -148,9 +144,9 @@ public class WheelController {
         return ResponseEntity.noContent().build();
     }
 
-    // ==========================================
+
     // SPIN WHEEL
-    // ==========================================
+
 
     @PostMapping("/{wheelId}/spin")
     public ResponseEntity<WheelItem> spin(
@@ -161,5 +157,24 @@ public class WheelController {
                 wheelService.spin(wheelId);
 
         return ResponseEntity.ok(result);
+    }
+
+      //get wheel items (all)
+    @GetMapping("/{wheelId}/items")
+    public ResponseEntity<List<WheelItem>> getWheelItems(
+            @PathVariable Integer wheelId
+    ) {
+        return ResponseEntity.ok(
+                wheelService.getWheelItems(wheelId)
+        );
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<CustomWheel>> searchWheels(
+            @RequestParam String name
+    ) {
+        return ResponseEntity.ok(
+                wheelService.searchWheelsByName(name)
+        );
     }
 }

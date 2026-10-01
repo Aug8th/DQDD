@@ -9,4 +9,5 @@ public interface CustomWheelRepository
         extends JpaRepository<CustomWheel, Integer> {
 
     List<CustomWheel> findByUserId(Integer userId);
+    List<CustomWheel> findByNameContainingIgnoreCase(String name);
 }

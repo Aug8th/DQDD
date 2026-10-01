@@ -173,4 +173,17 @@ public class WheelService {
 
         return availableItems.get(randomIndex);
     }
+
+        // Get Items from Wheels
+
+    public List<WheelItem> getWheelItems(Integer wheelId) {
+        // Make sure the wheel exists
+        getWheel(wheelId);
+
+        return itemRepository.findByWheelId(wheelId);
+    }
+
+    public List<CustomWheel> searchWheelsByName(String name) {
+        return wheelRepository.findByNameContainingIgnoreCase(name);
+    }
 }
