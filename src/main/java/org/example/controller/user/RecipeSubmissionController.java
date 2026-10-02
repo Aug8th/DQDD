@@ -4,6 +4,7 @@ import java.util.List;
 import org.example.dto.request.RecipeRequest;
 import org.example.dto.response.RecipeResponse;
 import org.example.entity.indoor.Recipe;
+import org.example.mapper.RecipeMapper;
 import org.example.repository.RecipeRepository;
 import org.example.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,6 @@ public class RecipeSubmissionController {
         recipe.setDifficulty(request.difficulty());
         recipe.setVideoUrl(request.videoUrl());
 
-        return RecipeResponse.from(recipes.saveAndFlush(recipe));
+        return RecipeMapper.toResponse(recipes.saveAndFlush(recipe));
     }
 }

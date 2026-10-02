@@ -35,6 +35,12 @@ public class UserFridge {
     @Column(name = "notified_flag")
     private boolean notifiedFlag;
 
+    @Column(name = "storage_type", columnDefinition = "enum('COOLER','FREEZER')")
+    private String storageType;
+
+    @Column(name = "category_tag", length = 100)
+    private String categoryTag;
+
     public Integer getId() {
         return id;
     }

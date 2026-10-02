@@ -1,6 +1,5 @@
 package org.example.dto.response;
 
-import org.example.entity.common.User;
 import java.time.LocalDateTime;
 
 public record UserResponse(
@@ -9,15 +8,7 @@ public record UserResponse(
         String authProvider,
         String role,
         String avatarUrl,
+        boolean active,
         LocalDateTime createdAt
 ) {
-    public static UserResponse from(User u){
-        return new UserResponse(
-                u.getId(),
-                u.getEmail(),
-                u.getAuthProvider(),
-                u.getRole(),
-                u.getAvatarUrl(),
-                u.getCreatedAt());
-    }
 }

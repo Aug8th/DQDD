@@ -32,6 +32,7 @@ public class SecurityConfig {
                     .withUsername(user.getEmail())
                     .password(user.getPasswordHash())
                     .roles(user.getRole().toUpperCase())
+                    .disabled(!user.isActive())
                     .build();
         };
     }
@@ -42,7 +43,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/uploads/**", "/api/recipes/public").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/uploads/**", "/api/recipes/public",
+                                "/api/locations", "/api/feedbacks/public").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults())

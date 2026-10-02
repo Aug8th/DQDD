@@ -2,10 +2,10 @@ package org.example.dto.response;
 
 import java.time.LocalDateTime;
 
-public record NotificationResponse(
+public record PublicFeedbackResponse(
         Integer id,
-        String message,
-        boolean isRead,
+        Integer rating,
+        String comment,
         LocalDateTime createdAt
 ) {
 }

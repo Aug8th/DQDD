@@ -27,6 +27,9 @@ public class Feedback {
     @Column(columnDefinition = "TEXT")
     private String comment;
 
+    @Column(name = "moderation_status", columnDefinition = "enum('pending','approved')")
+    private String moderationStatus = "pending";
+
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -52,5 +55,17 @@ public class Feedback {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public String getModerationStatus() {
+        return moderationStatus;
+    }
+
+    public void setModerationStatus(String moderationStatus) {
+        this.moderationStatus = moderationStatus;
     }
 }

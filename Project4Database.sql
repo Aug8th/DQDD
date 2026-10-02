@@ -124,6 +124,7 @@ USE food_app;
 
 ALTER TABLE users
     ADD COLUMN avatar_url VARCHAR(500) NULL;
+    ADD COLUMN is_active BOOLEAN NOT NULL DEFAULT TRUE;
 
 ALTER TABLE recipes
     ADD COLUMN image_url VARCHAR(500) NULL,
@@ -133,3 +134,6 @@ ALTER TABLE recipes
     ADD CONSTRAINT fk_recipes_submitter
         FOREIGN KEY (submitted_by_user_id)
         REFERENCES users(id) ON DELETE SET NULL;
+
+ALTER TABLE feedbacks
+    ADD COLUMN moderation_status ENUM('pending', 'approved') NOT NULL DEFAULT 'approved';

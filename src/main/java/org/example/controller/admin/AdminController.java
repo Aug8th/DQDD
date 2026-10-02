@@ -4,6 +4,8 @@ import java.util.List;
 import org.example.dto.request.RecipeReviewRequest;
 import org.example.dto.response.RecipeResponse;
 import org.example.dto.response.UserResponse;
+import org.example.mapper.RecipeMapper;
+import org.example.mapper.UserMapper;
 import org.example.repository.RecipeRepository;
 import org.example.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -30,10 +32,11 @@ public class AdminController {
 
     @GetMapping("/users")
     public List<UserResponse> users() {
-        return users.findAll().stream().map(UserResponse::from).toList();
+        return users.findAll().stream().map(UserMapper::toResponse).toList();
     }
 
     @GetMapping("/recipes/submissions")
+    @Transactional(readOnly = true)
     public List<RecipeResponse> submissions(@RequestParam(required = false) String status) {
         if (status != null && !List.of("pending", "approved", "rejected").contains(status)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid status");
@@ -42,7 +45,7 @@ public class AdminController {
         var items = status == null
                 ? recipes.findBySubmittedByIsNotNullOrderByCreatedAtDesc()
                 : recipes.findBySubmittedByIsNotNullAndApprovalStatusOrderByCreatedAtDesc(status);
-        return items.stream().map(RecipeResponse::from).toList();
+        return items.stream().map(RecipeMapper::toResponse).toList();
     }
 
     @Transactional
@@ -63,6 +66,6 @@ public class AdminController {
         }
 
         recipe.setApprovalStatus(body.status());
-        return RecipeResponse.from(recipe);
+        return RecipeMapper.toResponse(recipe);
     }
 }

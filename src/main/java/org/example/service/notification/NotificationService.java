@@ -6,6 +6,7 @@ import java.util.List;
 import org.example.dto.response.NotificationResponse;
 import org.example.entity.common.Notification;
 import org.example.entity.common.User;
+import org.example.mapper.NotificationMapper;
 import org.example.repository.NotificationRepository;
 import org.example.repository.UserFridgeRepository;
 import org.example.repository.UserRepository;
@@ -50,7 +51,7 @@ public class NotificationService {
         var items = unreadOnly
                 ? notifications.findByUserIdAndReadFalseOrderByCreatedAtDesc(userId)
                 : notifications.findByUserIdOrderByCreatedAtDesc(userId);
-        return items.stream().map(NotificationResponse::from).toList();
+        return items.stream().map(NotificationMapper::toResponse).toList();
     }
 
     @Transactional
@@ -59,7 +60,7 @@ public class NotificationService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Notification not found"));
         notification.setRead(true);
-        return NotificationResponse.from(notification);
+        return NotificationMapper.toResponse(notification);
     }
 
     private User user(String email) {
