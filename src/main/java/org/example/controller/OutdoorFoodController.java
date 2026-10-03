@@ -24,4 +24,14 @@ public class OutdoorFoodController {
                 outdoorFoodService.getRandom6Foods()
         );
     }
+
+    @GetMapping("/theme/{themeId}")
+    public ResponseEntity<List<OutdoorFood>> getFoodsByTheme(
+            @PathVariable Integer themeId
+    ) {
+        return ResponseEntity.ok(
+                outdoorFoodService.getFoodsByTheme(themeId)
+        );
+    }
+
 }

@@ -10,4 +10,5 @@ public interface OutdoorFoodRepository extends JpaRepository<OutdoorFood, Intege
 
     @Query(value = "SELECT * FROM outdoor_foods ORDER BY RAND() LIMIT 6", nativeQuery = true)
     List<OutdoorFood> findRandom6();
+    List<OutdoorFood> findByThemeId(Integer themeId);
 }

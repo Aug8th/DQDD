@@ -19,4 +19,9 @@ public class OutdoorFoodService {
     public List<OutdoorFood> getRandom6Foods() {
         return outdoorFoodRepository.findRandom6();
     }
+
+    public List<OutdoorFood> getFoodsByTheme(Integer themeId) {
+        return outdoorFoodRepository.findByThemeId(themeId);
+    }
+
 }

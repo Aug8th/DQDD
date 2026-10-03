@@ -177,4 +177,15 @@ public class WheelController {
                 wheelService.searchWheelsByName(name)
         );
     }
+
+    //Change wheel items
+    @PostMapping("/{wheelId}/change-item/{oldItemId}")
+    public ResponseEntity<WheelItem> changeItem(
+            @PathVariable Integer wheelId,
+            @PathVariable Integer oldItemId
+    ) {
+        return ResponseEntity.ok(
+                wheelService.changeItem(wheelId, oldItemId)
+        );
+    }
 }
