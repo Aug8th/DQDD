@@ -1,8 +1,10 @@
 package org.example.service.outdoor;
 
 
+import org.example.dto.outdoor.LetHangOutResponse;
 import org.example.entity.outdoor.Location;
 import org.example.repository.outdoor.LocationRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,5 +52,13 @@ public class LocationService {
                                 "Location not found"
                         )
                 );
+    }
+
+    //Get 10 Locations for 10 Items
+
+    public List<LetHangOutResponse> getTop10FoodsWithLocations() {
+        return locationRepository.findTop10FoodsWithLocations(
+                PageRequest.of(0, 10)
+        );
     }
 }

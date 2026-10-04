@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.dto.outdoor.LetHangOutResponse;
 import org.example.entity.outdoor.Location;
 import org.example.service.outdoor.LocationService;
 import org.springframework.http.ResponseEntity;
@@ -58,5 +59,14 @@ public class LocationController {
                 locationService.getLocation(id);
 
         return ResponseEntity.ok(location);
+    }
+
+    // get 10 locations for 10 items
+
+    @GetMapping("/top10")
+    public ResponseEntity<List<LetHangOutResponse>> getTop10FoodsWithLocations() {
+        return ResponseEntity.ok(
+                locationService.getTop10FoodsWithLocations()
+        );
     }
 }
