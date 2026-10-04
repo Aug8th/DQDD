@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.controller.outdoor;
 
 import org.example.dto.outdoor.LetHangOutResponse;
 import org.example.entity.outdoor.Location;

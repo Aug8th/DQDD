@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.controller.outdoor;
 
 import org.example.entity.outdoor.CustomWheel;
 import org.example.entity.outdoor.WheelItem;
