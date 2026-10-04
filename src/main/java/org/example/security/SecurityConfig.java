@@ -52,6 +52,7 @@ public class SecurityConfig {
                         auth.requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/recipes/**").permitAll()
                                 .requestMatchers("/api/wheel/public/**").permitAll()
+                                .requestMatchers("/api/outdoor/**").permitAll()
                                 .requestMatchers("/error").permitAll()
                                 .anyRequest().authenticated()
                 );
