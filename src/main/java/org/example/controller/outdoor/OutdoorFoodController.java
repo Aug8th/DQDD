@@ -18,13 +18,20 @@ public class OutdoorFoodController {
         this.outdoorFoodService = outdoorFoodService;
     }
 
+    //get ALL foods
+    @GetMapping/
+    public ResponseEntity<List<OutdoorFood>> getAllFoods() {
+        return ResponseEntity.ok(outdoorFoodService.getAllFoods());
+    }
+
+    //get 6 random foods
     @GetMapping("/random")
     public ResponseEntity<List<OutdoorFood>> getRandom6Foods() {
         return ResponseEntity.ok(
                 outdoorFoodService.getRandom6Foods()
         );
     }
-
+//get food
     @GetMapping("/theme/{themeId}")
     public ResponseEntity<List<OutdoorFood>> getFoodsByTheme(
             @PathVariable Integer themeId

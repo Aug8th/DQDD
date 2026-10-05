@@ -37,4 +37,5 @@ public interface LocationRepository
     ORDER BY l.ggMapsRating DESC
 """)
     List<LetHangOutResponse> findTop10FoodsWithLocations(Pageable pageable);
+
 }

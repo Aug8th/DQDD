@@ -21,6 +21,13 @@ public class LocationController {
         this.locationService = locationService;
     }
 
+  // Get all locations
+
+    @GetMapping
+    public ResponseEntity<List<Location>> getAllLocations() {
+        return ResponseEntity.ok(locationService.getAllLocations());
+    }
+
 
     // GET LOCATIONS BY FOOD
 

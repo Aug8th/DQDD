@@ -30,6 +30,12 @@ public class WheelService {
     }
 
 
+    // GET all wheels
+
+    public List<CustomWheel> getAllWheels() {
+        return wheelRepository.findAll();
+    }
+
     // CREATE WHEEL
 
     public CustomWheel createWheel(
@@ -48,7 +54,7 @@ public class WheelService {
     }
 
 
-    // GET WHEEL
+    // GET WHEEL by id
 
     public CustomWheel getWheel(Integer wheelId) {
 

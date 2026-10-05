@@ -21,6 +21,12 @@ public class WheelController {
         this.wheelService = wheelService;
     }
 
+    // Get all wheels
+    @GetMapping
+    public ResponseEntity<List<CustomWheel>> getAllWheels() {
+        return ResponseEntity.ok(wheelService.getAllWheels());
+    }
+
 
     // CREATE WHEEL=
 

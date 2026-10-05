@@ -21,6 +21,12 @@ public class LocationService {
         this.locationRepository = locationRepository;
     }
 
+    // GET ALL Locations
+    public List<Location> getAllLocations() {
+        return locationRepository.findAll();
+    }
+
+
     // GET LOCATIONS BY FOOD
 
     public List<Location> getLocationsByFood(
