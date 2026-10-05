@@ -19,7 +19,7 @@ public class OutdoorFoodController {
     }
 
     //get ALL foods
-    @GetMapping/
+    @GetMapping
     public ResponseEntity<List<OutdoorFood>> getAllFoods() {
         return ResponseEntity.ok(outdoorFoodService.getAllFoods());
     }
