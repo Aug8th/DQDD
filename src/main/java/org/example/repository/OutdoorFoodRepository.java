@@ -1,6 +1,6 @@
-package org.example.repository.outdoor;
+package org.example.repository;
 
-import org.example.entity.outdoor.OutdoorFood;
+import org.example.entity.OutdoorFood;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

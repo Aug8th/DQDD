@@ -1,7 +1,7 @@
-package org.example.repository.outdoor;
+package org.example.repository;
 
 
-import org.example.entity.outdoor.Location;
+import org.example.entity.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.example.dto.outdoor.LetHangOutResponse;
 import org.springframework.data.domain.Pageable;

@@ -1,4 +1,4 @@
-package org.example.entity.outdoor;
+package org.example.entity;
 
 
 import jakarta.persistence.*;

@@ -1,6 +1,6 @@
-package org.example.repository.outdoor;
+package org.example.repository;
 
-import org.example.entity.outdoor.WheelItem;
+import org.example.entity.WheelItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

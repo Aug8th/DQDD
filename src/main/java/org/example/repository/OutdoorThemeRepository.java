@@ -1,6 +1,6 @@
-package org.example.repository.outdoor;
+package org.example.repository;
 
-import org.example.entity.outdoor.OutdoorTheme;
+import org.example.entity.OutdoorTheme;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OutdoorThemeRepository extends JpaRepository<OutdoorTheme, Integer> {

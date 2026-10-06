@@ -1,13 +1,13 @@
 package org.example.service.outdoor;
 
 import lombok.RequiredArgsConstructor;
-import org.example.entity.outdoor.CustomWheel;
-import org.example.entity.outdoor.WheelItem;
-import org.example.entity.outdoor.WheelHistory;
+import org.example.entity.CustomWheel;
+import org.example.entity.WheelItem;
+import org.example.entity.WheelHistory;
 import org.example.enums.WheelType;
-import org.example.repository.outdoor.CustomWheelRepository;
-import org.example.repository.outdoor.WheelHistoryRepository;
-import org.example.repository.outdoor.WheelItemRepository;
+import org.example.repository.CustomWheelRepository;
+import org.example.repository.WheelHistoryRepository;
+import org.example.repository.WheelItemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

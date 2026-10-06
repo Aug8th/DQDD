@@ -2,8 +2,8 @@ package org.example.service.outdoor;
 
 
 import lombok.RequiredArgsConstructor;
-import org.example.entity.outdoor.OutdoorFood;
-import org.example.repository.outdoor.OutdoorFoodRepository;
+import org.example.entity.OutdoorFood;
+import org.example.repository.OutdoorFoodRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
