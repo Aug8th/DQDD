@@ -1,16 +1,24 @@
 package org.example.entity.outdoor;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "locations")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Location {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "food_id", nullable = false)
     private OutdoorFood food;
 
@@ -25,70 +33,4 @@ public class Location {
 
     @Column(name = "is_admin_suggested")
     private Boolean isAdminSuggested = false;
-
-    // No-Args Constructor
-    public Location() {
-    }
-
-    // All-Args Constructor
-    public Location(Integer id, OutdoorFood food, String name,
-                    String address, Float ggMapsRating,
-                    Boolean isAdminSuggested) {
-        this.id = id;
-        this.food = food;
-        this.name = name;
-        this.address = address;
-        this.ggMapsRating = ggMapsRating;
-        this.isAdminSuggested = isAdminSuggested;
-    }
-
-    // Getters and Setters
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public OutdoorFood getFood() {
-        return food;
-    }
-
-    public void setFood(OutdoorFood food) {
-        this.food = food;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Float getGgMapsRating() {
-        return ggMapsRating;
-    }
-
-    public void setGgMapsRating(Float ggMapsRating) {
-        this.ggMapsRating = ggMapsRating;
-    }
-
-    public Boolean getIsAdminSuggested() {
-        return isAdminSuggested;
-    }
-
-    public void setIsAdminSuggested(Boolean adminSuggested) {
-        isAdminSuggested = adminSuggested;
-    }
 }

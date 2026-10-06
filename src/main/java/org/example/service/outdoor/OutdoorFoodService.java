@@ -1,12 +1,14 @@
 package org.example.service.outdoor;
 
 
+import lombok.RequiredArgsConstructor;
 import org.example.entity.outdoor.OutdoorFood;
 import org.example.repository.outdoor.OutdoorFoodRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class OutdoorFoodService {
 
@@ -17,15 +19,12 @@ public class OutdoorFoodService {
         return outdoorFoodRepository.findAll();
     }
 
-    public OutdoorFoodService(OutdoorFoodRepository outdoorFoodRepository) {
-        this.outdoorFoodRepository = outdoorFoodRepository;
-    }
    //get 6 random foods
     public List<OutdoorFood> getRandom6Foods() {
         return outdoorFoodRepository.findRandom6();
     }
 
-    //get food by wtf ever it is
+    //get food by theme
     public List<OutdoorFood> getFoodsByTheme(Integer themeId) {
         return outdoorFoodRepository.findByThemeId(themeId);
     }

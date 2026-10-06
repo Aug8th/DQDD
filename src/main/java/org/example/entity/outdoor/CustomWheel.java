@@ -1,6 +1,10 @@
 package org.example.entity.outdoor;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.example.enums.WheelType;
 
 import java.util.ArrayList;
@@ -8,6 +12,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "custom_wheels")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CustomWheel {
 
     @Id
@@ -30,61 +38,4 @@ public class CustomWheel {
             orphanRemoval = true
     )
     private List<WheelItem> items = new ArrayList<>();
-
-    public CustomWheel() {
-    }
-
-    public CustomWheel(
-            Integer id,
-            Integer userId,
-            WheelType wheelType,
-            String name,
-            List<WheelItem> items
-    ) {
-        this.id = id;
-        this.userId = userId;
-        this.wheelType = wheelType;
-        this.name = name;
-        this.items = items;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public WheelType getWheelType() {
-        return wheelType;
-    }
-
-    public void setWheelType(WheelType wheelType) {
-        this.wheelType = wheelType;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<WheelItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<WheelItem> items) {
-        this.items = items;
-    }
 }

@@ -1,6 +1,7 @@
 package org.example.controller.outdoor;
 
 
+import lombok.RequiredArgsConstructor;
 import org.example.entity.outdoor.OutdoorFood;
 import org.example.service.outdoor.OutdoorFoodService;
 import org.springframework.http.ResponseEntity;
@@ -8,15 +9,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/outdoor/foods")
 public class OutdoorFoodController {
 
     private final OutdoorFoodService outdoorFoodService;
-
-    public OutdoorFoodController(OutdoorFoodService outdoorFoodService) {
-        this.outdoorFoodService = outdoorFoodService;
-    }
 
     //get ALL foods
     @GetMapping
@@ -31,7 +29,7 @@ public class OutdoorFoodController {
                 outdoorFoodService.getRandom6Foods()
         );
     }
-//get food
+//get food by theme
     @GetMapping("/theme/{themeId}")
     public ResponseEntity<List<OutdoorFood>> getFoodsByTheme(
             @PathVariable Integer themeId

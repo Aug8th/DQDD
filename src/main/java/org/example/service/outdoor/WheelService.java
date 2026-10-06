@@ -1,34 +1,26 @@
 package org.example.service.outdoor;
 
+import lombok.RequiredArgsConstructor;
 import org.example.entity.outdoor.CustomWheel;
 import org.example.entity.outdoor.WheelItem;
-import org.example.enums.WheelType;
 import org.example.entity.outdoor.WheelHistory;
+import org.example.enums.WheelType;
 import org.example.repository.outdoor.CustomWheelRepository;
 import org.example.repository.outdoor.WheelHistoryRepository;
 import org.example.repository.outdoor.WheelItemRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Random;
 
+@RequiredArgsConstructor
 @Service
 public class WheelService {
 
     private final CustomWheelRepository wheelRepository;
     private final WheelItemRepository itemRepository;
     private final WheelHistoryRepository historyRepository;
-
-    public WheelService(
-            CustomWheelRepository wheelRepository,
-            WheelItemRepository itemRepository,
-            WheelHistoryRepository historyRepository
-    ) {
-        this.wheelRepository = wheelRepository;
-        this.itemRepository = itemRepository;
-        this.historyRepository = historyRepository;
-    }
-
 
     // GET all wheels
 
@@ -127,26 +119,25 @@ public class WheelService {
     // DELETE ITEM
 
 
-    public void deleteItem(
-            Integer wheelId,
-            Integer itemId
-    ) {
+    @Transactional
+    public void deleteWheel(Integer wheelId) {
 
-        WheelItem item = itemRepository.findById(itemId)
-                .orElseThrow(() ->
-                        new RuntimeException("Item not found")
-                );
+        CustomWheel wheel = wheelRepository.findById(wheelId)
+                .orElseThrow(() -> new RuntimeException("Wheel not found"));
 
-        // Make sure this item belongs to this wheel
-        if (!item.getWheel().getId().equals(wheelId)) {
-            throw new RuntimeException(
-                    "Item does not belong to this wheel"
-            );
+        // 1. Delete history
+        historyRepository.deleteByWheelId(wheelId);
+
+        // 2. Delete items
+        List<WheelItem> items = itemRepository.findByWheelId(wheelId);
+
+        if (!items.isEmpty()) {
+            itemRepository.deleteAll(items);
         }
 
-        itemRepository.delete(item);
+        // 3. Delete the wheel itself
+        wheelRepository.delete(wheel);
     }
-
 
     // RANDOM SPIN
 

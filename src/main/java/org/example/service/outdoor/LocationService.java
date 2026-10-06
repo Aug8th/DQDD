@@ -1,6 +1,7 @@
 package org.example.service.outdoor;
 
 
+import lombok.RequiredArgsConstructor;
 import org.example.dto.outdoor.LetHangOutResponse;
 import org.example.entity.outdoor.Location;
 import org.example.repository.outdoor.LocationRepository;
@@ -9,17 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class LocationService {
 
     private final LocationRepository locationRepository;
 
-    // Constructor injection
-    public LocationService(
-            LocationRepository locationRepository
-    ) {
-        this.locationRepository = locationRepository;
-    }
 
     // GET ALL Locations
     public List<Location> getAllLocations() {

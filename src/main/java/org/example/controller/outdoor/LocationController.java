@@ -1,5 +1,6 @@
 package org.example.controller.outdoor;
 
+import lombok.RequiredArgsConstructor;
 import org.example.dto.outdoor.LetHangOutResponse;
 import org.example.entity.outdoor.Location;
 import org.example.service.outdoor.LocationService;
@@ -8,18 +9,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/outdoor/locations")
 public class LocationController {
 
     private final LocationService locationService;
-
-    // Constructor injection
-    public LocationController(
-            LocationService locationService
-    ) {
-        this.locationService = locationService;
-    }
 
   // Get all locations
 

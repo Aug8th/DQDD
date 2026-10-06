@@ -8,4 +8,6 @@ import java.util.List;
 public interface WheelHistoryRepository extends JpaRepository<WheelHistory, Integer> {
 
     List<WheelHistory> findByWheelIdOrderByCreatedAtDesc(Integer wheelId);
+
+    void deleteByWheelId(Integer wheelId);
 }

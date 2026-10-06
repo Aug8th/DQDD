@@ -1,5 +1,6 @@
 package org.example.controller.outdoor;
 
+import lombok.RequiredArgsConstructor;
 import org.example.entity.outdoor.CustomWheel;
 import org.example.entity.outdoor.WheelItem;
 import org.example.enums.WheelType;
@@ -10,16 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/outdoor/wheels")
 public class WheelController {
 
     private final WheelService wheelService;
 
-    // Constructor injection
-    public WheelController(WheelService wheelService) {
-        this.wheelService = wheelService;
-    }
 
     // Get all wheels
     @GetMapping
@@ -135,18 +133,9 @@ public class WheelController {
 
     // DELETE ITEM
 
-
-    @DeleteMapping("/{wheelId}/items/{itemId}")
-    public ResponseEntity<Void> deleteItem(
-            @PathVariable Integer wheelId,
-            @PathVariable Integer itemId
-    ) {
-
-        wheelService.deleteItem(
-                wheelId,
-                itemId
-        );
-
+    @DeleteMapping("/{wheelId}")
+    public ResponseEntity<Void> deleteWheel(@PathVariable Integer wheelId) {
+        wheelService.deleteWheel(wheelId);
         return ResponseEntity.noContent().build();
     }
 
