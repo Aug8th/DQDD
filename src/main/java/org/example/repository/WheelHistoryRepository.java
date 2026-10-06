@@ -10,4 +10,6 @@ public interface WheelHistoryRepository extends JpaRepository<WheelHistory, Inte
     List<WheelHistory> findByWheelIdOrderByCreatedAtDesc(Integer wheelId);
 
     void deleteByWheelId(Integer wheelId);
+
+    void deleteByOldItemIdOrNewItemId(Integer oldItemId, Integer newItemId);
 }

@@ -120,25 +120,21 @@ public class WheelService {
 
 
     @Transactional
-    public void deleteWheel(Integer wheelId) {
+    public void deleteItem(Integer wheelId, Integer itemId) {
 
-        CustomWheel wheel = wheelRepository.findById(wheelId)
-                .orElseThrow(() -> new RuntimeException("Wheel not found"));
+        WheelItem item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("Item not found"));
 
-        // 1. Delete history
-        historyRepository.deleteByWheelId(wheelId);
-
-        // 2. Delete items
-        List<WheelItem> items = itemRepository.findByWheelId(wheelId);
-
-        if (!items.isEmpty()) {
-            itemRepository.deleteAll(items);
+        if (!item.getWheel().getId().equals(wheelId)) {
+            throw new RuntimeException("Item does not belong to this wheel");
         }
 
-        // 3. Delete the wheel itself
-        wheelRepository.delete(wheel);
-    }
+        // Delete all history involving this item
+        historyRepository.deleteByOldItemIdOrNewItemId(itemId, itemId);
 
+        // Delete the item
+        itemRepository.delete(item);
+    }
     // RANDOM SPIN
 
 

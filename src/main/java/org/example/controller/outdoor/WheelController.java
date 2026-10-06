@@ -133,12 +133,15 @@ public class WheelController {
 
     // DELETE ITEM
 
-    @DeleteMapping("/{wheelId}")
-    public ResponseEntity<Void> deleteWheel(@PathVariable Integer wheelId) {
-        wheelService.deleteWheel(wheelId);
+    @DeleteMapping("/{wheelId}/items/{itemId}")
+    public ResponseEntity<Void> deleteItem(
+            @PathVariable Integer wheelId,
+            @PathVariable Integer itemId) {
+
+        wheelService.deleteItem(wheelId, itemId);
+
         return ResponseEntity.noContent().build();
     }
-
 
     // SPIN WHEEL
 
