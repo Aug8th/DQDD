@@ -19,6 +19,23 @@ public class RecipePublicController {
         this.recipes = recipes;
     }
 
+    @GetMapping("/public/{id}")
+    @Transactional(readOnly = true)
+    public RecipeResponse detail(@org.springframework.web.bind.annotation.PathVariable Integer id) {
+        var recipe = recipes.findById(id)
+                .filter(r -> "approved".equals(r.getApprovalStatus()))
+                .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.NOT_FOUND, "Recipe not found"));
+        return RecipeMapper.toResponse(recipe);
+    }
+
+    @GetMapping("/public/recommended")
+    @Transactional(readOnly = true)
+    public List<RecipeResponse> recommended() {
+        return recipes.findByApprovalStatusAndRecommendedTrueOrderByCreatedAtDesc("approved")
+                .stream().map(RecipeMapper::toResponse).toList();
+    }
+
     @GetMapping("/public")
     @Transactional(readOnly = true)
     public List<RecipeResponse> list(@RequestParam(required = false) String dishType,

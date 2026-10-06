@@ -3,9 +3,9 @@ package org.example.mapper;
 import org.example.dto.response.LocationResponse;
 import org.example.entity.outdoor.Location;
 
-public final class LocationMapper {
-    private LocationMapper() {
-    }
+@lombok.experimental.UtilityClass
+public class LocationMapper {
+
 
     public static LocationResponse toResponse(Location l) {
         return new LocationResponse(

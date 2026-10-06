@@ -21,10 +21,12 @@ public class NotificationService {
     private final UserFridgeRepository fridges;
     private final NotificationRepository notifications;
     private final UserRepository users;
+    private final EmailService emails;
 
     public NotificationService(UserFridgeRepository fridges,
                                NotificationRepository notifications,
-                               UserRepository users) {
+                               UserRepository users, EmailService emails) {
+        this.emails = emails;
         this.fridges = fridges;
         this.notifications = notifications;
         this.users = users;
@@ -35,13 +37,14 @@ public class NotificationService {
     public void createExpiryWarnings() {
         var today = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh"));
         var expiringItems = fridges.findByNotifiedFlagFalseAndExpiryDateBetween(
-                today.plusDays(1), today.plusDays(2));
+                today, today.plusDays(3));
 
         for (var item : expiringItems) {
             String message = "Nguyên liệu " + item.getIngredientName()
                     + " sẽ hết hạn ngày " + item.getExpiryDate() + ". Hãy dùng sớm nhé!";
             notifications.save(new Notification(item.getUser(), message));
             item.setNotifiedFlag(true);
+            emails.sendExpiryWarning(item.getUser().getEmail(), message);
         }
     }
 

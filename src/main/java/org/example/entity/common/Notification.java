@@ -11,6 +11,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
+@lombok.Getter
+@lombok.Setter
+@lombok.NoArgsConstructor
 @Entity
 @Table(name = "user_notifications")
 public class Notification {
@@ -31,30 +34,9 @@ public class Notification {
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    protected Notification() {}
-
     public Notification(User user, String message) {
         this.user = user;
         this.message = message;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public boolean isRead() {
-        return read;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setRead(boolean read) {
-        this.read = read;
-    }
 }

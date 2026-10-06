@@ -10,6 +10,10 @@ public record RecipeAdminRequest(
         Integer servings,
         String difficulty,
         String instructions,
-        String videoUrl
+        String videoUrl,
+        java.util.List<RecipeIngredientRequest> ingredients,
+        String description,
+        Integer caloriesKcal,
+        String cookingTip
 ) {
 }

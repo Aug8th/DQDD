@@ -9,7 +9,20 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.domain.Pageable;
 
+@org.springframework.stereotype.Repository
 public interface UserFridgeRepository extends JpaRepository<UserFridge, Integer> {
+    List<UserFridge> findByUserId(Integer userId);
+    List<UserFridge> findByUserIdAndStorageType(Integer userId, String storageType);
+
+    default List<UserFridge> findByUserIdAndStorageType(Integer userId, UserFridge.StorageType type) {
+        return findByUserIdAndStorageType(userId, type == null ? null : type.name());
+    }
+
+    default List<UserFridge> findByExpiryDateLessThanEqualAndExpiryDateGreaterThanEqualAndNotifiedFlagFalse(
+            LocalDate endDate, LocalDate startDate) {
+        return findByNotifiedFlagFalseAndExpiryDateBetween(startDate, endDate);
+    }
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<UserFridge> findByNotifiedFlagFalseAndExpiryDateBetween(LocalDate from, LocalDate to);
 
@@ -29,4 +42,9 @@ public interface UserFridgeRepository extends JpaRepository<UserFridge, Integer>
 
         long getItemCount();
     }
+
+    List<UserFridge> findByUserIdOrderByExpiryDateAsc(
+            Integer userId,
+            org.springframework.data.domain.Pageable pageable
+    );
 }

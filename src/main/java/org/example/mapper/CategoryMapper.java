@@ -3,9 +3,9 @@ package org.example.mapper;
 import org.example.dto.response.CategoryResponse;
 import org.example.entity.indoor.Category;
 
-public final class CategoryMapper {
-    private CategoryMapper() {
-    }
+@lombok.experimental.UtilityClass
+public class CategoryMapper {
+
 
     public static CategoryResponse toResponse(Category c) {
         return new CategoryResponse(

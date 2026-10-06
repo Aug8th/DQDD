@@ -5,9 +5,9 @@ import org.example.dto.response.FeedbackSubmitResponse;
 import org.example.dto.response.PublicFeedbackResponse;
 import org.example.entity.common.Feedback;
 
-public final class FeedbackMapper {
-    private FeedbackMapper() {
-    }
+@lombok.experimental.UtilityClass
+public class FeedbackMapper {
+
 
     public static FeedbackResponse toResponse(Feedback fb) {
         return new FeedbackResponse(

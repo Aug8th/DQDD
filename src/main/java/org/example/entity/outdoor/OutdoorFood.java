@@ -7,6 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+@lombok.Getter
+@lombok.Setter
+@lombok.NoArgsConstructor
 @Entity
 @Table(name = "outdoor_foods")
 public class OutdoorFood {
@@ -20,15 +23,4 @@ public class OutdoorFood {
     @Column(nullable = false)
     private String name;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Integer getThemeId() {
-        return themeId;
-    }
 }

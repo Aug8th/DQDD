@@ -17,6 +17,12 @@ public record RecipeResponse(
         String country,
         Integer submittedByUserId,
         String approvalStatus,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        java.util.List<RecipeIngredientResponse> ingredients,
+        boolean recommended,
+        Integer caloriesKcal,
+        String cookingTip,
+        java.util.List<String> steps,
+        String description
 ) {
 }

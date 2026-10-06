@@ -10,6 +10,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+@lombok.Getter
+@lombok.Setter
+@lombok.NoArgsConstructor
 @Entity
 @Table(name = "locations")
 public class Location {
@@ -33,8 +36,6 @@ public class Location {
     @Column(name = "is_admin_suggested")
     private boolean adminSuggested;
 
-    protected Location() {}
-
     public Location(OutdoorFood food, String name, String address,
                     Float ggMapsRating, boolean adminSuggested) {
         this.food = food;
@@ -42,30 +43,6 @@ public class Location {
         this.address = address;
         this.ggMapsRating = ggMapsRating;
         this.adminSuggested = adminSuggested;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public OutdoorFood getFood() {
-        return food;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public Float getGgMapsRating() {
-        return ggMapsRating;
-    }
-
-    public boolean isAdminSuggested() {
-        return adminSuggested;
     }
 
     public void update(OutdoorFood food, String name, String address,

@@ -50,6 +50,7 @@ public class RecipeAdminController {
     }
 
     @PostMapping
+    @Transactional
     @ResponseStatus(HttpStatus.CREATED)
     public RecipeResponse create(@RequestBody RecipeAdminRequest request) {
         validate(request);
@@ -87,7 +88,7 @@ public class RecipeAdminController {
                 || (request.dishType() != null
                 && !List.of("MAIN_DISH", "DRINK", "DESSERT").contains(request.dishType()))
                 || (request.region() != null
-                && !List.of("ASIAN", "EUROPEAN").contains(request.region()))
+                && !List.of("ASIAN", "EUROPEAN", "AMERICAN", "AFRICAN", "OCEANIAN", "STREET_FOOD").contains(request.region()))
                 || (request.prepTime() != null && request.prepTime() < 0)
                 || (request.servings() != null && request.servings() < 1)
                 || (request.videoUrl() != null && request.videoUrl().length() > 255)
@@ -95,12 +96,43 @@ public class RecipeAdminController {
                 && !List.of("dễ", "trung bình", "khó").contains(request.difficulty()))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid recipe fields");
         }
+        if ((request.description() != null && request.description().length() > 5000)
+                || (request.cookingTip() != null && request.cookingTip().length() > 5000)
+                || (request.caloriesKcal() != null && request.caloriesKcal() <= 0)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid description, calories or tip");
+        }
+        if (request.instructions().getBytes(java.nio.charset.StandardCharsets.UTF_8).length > 65535) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Instructions exceed TEXT size");
+        }
+        if (request.ingredients() != null) {
+            if (request.ingredients().size() > 50) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Too many ingredients");
+            }
+            for (var ingredient : request.ingredients()) {
+                if (ingredient == null || ingredient.ingredientName() == null
+                        || ingredient.ingredientName().isBlank()
+                        || ingredient.ingredientName().trim().length() > 150
+                        || (ingredient.quantity() != null && ingredient.quantity().length() > 100)) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ingredient");
+                }
+            }
+        }
         if (request.categoryId() != null && !categories.existsById(request.categoryId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category does not exist");
         }
     }
 
     private void apply(Recipe recipe, RecipeAdminRequest request) {
+        if (request.ingredients() != null) {
+            recipe.getIngredients().clear();
+            for (var ingredient : request.ingredients()) {
+                recipe.getIngredients().add(new org.example.entity.indoor.RecipeIngredient(
+                        recipe, ingredient.ingredientName().trim(), ingredient.quantity()));
+            }
+        }
+        if (request.description() != null) { recipe.setDescription(request.description().trim()); }
+        if (request.caloriesKcal() != null) { recipe.setCaloriesKcal(request.caloriesKcal()); }
+        if (request.cookingTip() != null) { recipe.setCookingTip(request.cookingTip().trim()); }
         recipe.setName(request.name().trim());
         recipe.setCategoryId(request.categoryId());
         recipe.setDishType(request.dishType() == null ? "MAIN_DISH" : request.dishType());

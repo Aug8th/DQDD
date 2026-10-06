@@ -3,10 +3,10 @@ package org.example.mapper;
 import org.example.dto.response.UserResponse;
 import org.example.entity.common.User;
 
-public final class UserMapper {
+@lombok.experimental.UtilityClass
+public class UserMapper {
 
-    private UserMapper() {
-    }
+
 
     public static UserResponse toResponse(User u) {
         return new UserResponse(

@@ -11,6 +11,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
+@lombok.Getter
+@lombok.Setter
+@lombok.NoArgsConstructor
 @Entity
 @Table(name = "feedbacks")
 public class Feedback {
@@ -33,39 +36,10 @@ public class Feedback {
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    protected Feedback() {}
-
     public Feedback(User user, Integer rating, String comment) {
         this.user = user;
         this.rating = rating;
         this.comment = comment;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public Integer getRating() {
-        return rating;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public String getModerationStatus() {
-        return moderationStatus;
-    }
-
-    public void setModerationStatus(String moderationStatus) {
-        this.moderationStatus = moderationStatus;
-    }
 }

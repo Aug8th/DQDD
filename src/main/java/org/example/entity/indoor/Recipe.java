@@ -12,6 +12,9 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import org.example.entity.common.User;
 
+@lombok.Getter
+@lombok.Setter
+@lombok.NoArgsConstructor
 @Entity
 @Table(name = "recipes")
 public class Recipe {
@@ -19,8 +22,32 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "calories_kcal")
+    private Integer caloriesKcal;
+
+    @Column(name = "cooking_tip", columnDefinition = "TEXT")
+    private String cookingTip;
+
+    @Column(name = "is_recommended", nullable = false)
+    private boolean recommended;
+
+    @jakarta.persistence.OneToMany(mappedBy = "recipe", fetch = FetchType.LAZY,
+            cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    @jakarta.persistence.OrderBy("id ASC")
+    private java.util.List<RecipeIngredient> ingredients = new java.util.ArrayList<>();
+
     @Column(name = "category_id")
     private Integer categoryId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", insertable = false, updatable = false)
+    private Category category;
+
+    public enum DishType { MAIN_DISH, DRINK, DESSERT }
+    public enum Region { ASIAN, EUROPEAN, AMERICAN, AFRICAN, OCEANIAN, STREET_FOOD }
 
     private String name;
 
@@ -44,7 +71,7 @@ public class Recipe {
     @Column(name = "dish_type", columnDefinition = "enum('MAIN_DISH','DRINK','DESSERT')")
     private String dishType = "MAIN_DISH";
 
-    @Column(columnDefinition = "enum('ASIAN','EUROPEAN')")
+    @Column(columnDefinition = "enum('ASIAN','EUROPEAN','AMERICAN','AFRICAN','OCEANIAN','STREET_FOOD')")
     private String region;
 
     @Column(length = 100)
@@ -60,73 +87,8 @@ public class Recipe {
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public Integer getCategoryId() {
-        return categoryId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Integer getPrepTime() {
-        return prepTime;
-    }
-
-    public Integer getServings() {
-        return servings;
-    }
-
-    public String getDifficulty() {
-        return difficulty;
-    }
-
-    public String getInstructions() {
-        return instructions;
-    }
-
-    public String getVideoUrl() {
-        return videoUrl;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public String getDishType() {
-        return dishType;
-    }
-
-    public String getRegion() {
-        return region;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public User getSubmittedBy() {
-        return submittedBy;
-    }
-
-    public String getApprovalStatus() {
-        return approvalStatus;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setApprovalStatus(String approvalStatus) {
-        this.approvalStatus = approvalStatus;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+    public void setDishType(DishType type) { this.dishType = type == null ? null : type.name(); }
+    public void setRegion(Region region) { this.region = region == null ? null : region.name(); }
 
     public void setDishType(String dishType) {
         this.dishType = dishType;
@@ -136,39 +98,4 @@ public class Recipe {
         this.region = region;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setInstructions(String instructions) {
-        this.instructions = instructions;
-    }
-
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public void setPrepTime(Integer prepTime) {
-        this.prepTime = prepTime;
-    }
-
-    public void setServings(Integer servings) {
-        this.servings = servings;
-    }
-
-    public void setDifficulty(String difficulty) {
-        this.difficulty = difficulty;
-    }
-
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
-    }
-
-    public void setSubmittedBy(User submittedBy) {
-        this.submittedBy = submittedBy;
-    }
 }

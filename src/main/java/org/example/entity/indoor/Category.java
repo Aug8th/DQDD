@@ -7,6 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+@lombok.Getter
+@lombok.Setter
+@lombok.NoArgsConstructor
 @Entity
 @Table(name = "categories")
 public class Category {
@@ -17,21 +20,11 @@ public class Category {
     @Column(nullable = false, unique = true, length = 100)
     private String name;
 
-    protected Category() {}
-
     public Category(String name) {
         this.name = name;
     }
 
-    public Integer getId() {
-        return id;
-    }
+    @jakarta.persistence.OneToMany(mappedBy = "category", fetch = jakarta.persistence.FetchType.LAZY)
+    private java.util.List<Recipe> recipes = new java.util.ArrayList<>();
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

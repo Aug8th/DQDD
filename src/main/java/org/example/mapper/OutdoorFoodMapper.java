@@ -3,9 +3,9 @@ package org.example.mapper;
 import org.example.dto.response.OutdoorFoodOptionResponse;
 import org.example.entity.outdoor.OutdoorFood;
 
-public final class OutdoorFoodMapper {
-    private OutdoorFoodMapper() {
-    }
+@lombok.experimental.UtilityClass
+public class OutdoorFoodMapper {
+
 
     public static OutdoorFoodOptionResponse toOptionResponse(OutdoorFood f) {
         return new OutdoorFoodOptionResponse(

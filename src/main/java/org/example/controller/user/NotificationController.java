@@ -15,9 +15,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/notifications")
 public class NotificationController {
     private final NotificationService service;
+    private final org.example.service.CurrentUserService currentUser;
 
-    public NotificationController(NotificationService service) {
+    public NotificationController(NotificationService service, org.example.service.CurrentUserService currentUser) {
+        this.currentUser = currentUser;
         this.service = service;
+    }
+
+    @GetMapping("/user/{userId}")
+    public List<NotificationResponse> listByUser(Authentication auth, @PathVariable Integer userId) {
+        currentUser.requireOwner(auth, userId);
+        return service.list(auth.getName(), false);
     }
 
     @GetMapping
@@ -26,7 +34,7 @@ public class NotificationController {
         return service.list(auth.getName(), unreadOnly);
     }
 
-    @PatchMapping("/{id}/read")
+    @RequestMapping(value = "/{id}/read", method = {org.springframework.web.bind.annotation.RequestMethod.PATCH, org.springframework.web.bind.annotation.RequestMethod.PUT})
     public NotificationResponse markRead(Authentication auth, @PathVariable Integer id) {
         return service.markRead(auth.getName(), id);
     }
