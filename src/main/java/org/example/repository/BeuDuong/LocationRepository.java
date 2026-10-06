@@ -1,7 +1,7 @@
 package org.example.repository.BeuDuong;
 
 
-import org.example.entity.Location;
+import org.example.entity.BeuDuong.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.example.dto.outdoor.LetHangOutResponse;
 import org.springframework.data.domain.Pageable;

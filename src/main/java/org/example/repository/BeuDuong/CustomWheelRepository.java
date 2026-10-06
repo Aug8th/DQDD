@@ -1,6 +1,6 @@
 package org.example.repository.BeuDuong;
 
-import org.example.entity.CustomWheel;
+import org.example.entity.BeuDuong.CustomWheel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

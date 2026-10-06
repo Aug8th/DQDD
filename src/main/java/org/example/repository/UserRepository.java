@@ -1,4 +1,4 @@
-package org.example.repository.BeuDuong;
+package org.example.repository;
 
 import org.example.entity.common.User;
 import org.springframework.data.jpa.repository.JpaRepository;

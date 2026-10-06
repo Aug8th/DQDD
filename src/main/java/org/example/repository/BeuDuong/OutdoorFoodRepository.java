@@ -1,6 +1,6 @@
 package org.example.repository.BeuDuong;
 
-import org.example.entity.OutdoorFood;
+import org.example.entity.BeuDuong.OutdoorFood;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,9 +1,9 @@
 package org.example.service.outdoor;
 
 import lombok.RequiredArgsConstructor;
-import org.example.entity.CustomWheel;
-import org.example.entity.WheelItem;
-import org.example.entity.WheelHistory;
+import org.example.entity.BeuDuong.CustomWheel;
+import org.example.entity.BeuDuong.WheelItem;
+import org.example.entity.BeuDuong.WheelHistory;
 import org.example.enums.WheelType;
 import org.example.repository.BeuDuong.CustomWheelRepository;
 import org.example.repository.BeuDuong.WheelHistoryRepository;

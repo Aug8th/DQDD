@@ -2,7 +2,7 @@ package org.example.service.outdoor;
 
 
 import lombok.RequiredArgsConstructor;
-import org.example.entity.OutdoorFood;
+import org.example.entity.BeuDuong.OutdoorFood;
 import org.example.repository.BeuDuong.OutdoorFoodRepository;
 import org.springframework.stereotype.Service;
 

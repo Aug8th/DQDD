@@ -1,8 +1,8 @@
 package org.example.controller.outdoor;
 
 import lombok.RequiredArgsConstructor;
-import org.example.entity.CustomWheel;
-import org.example.entity.WheelItem;
+import org.example.entity.BeuDuong.CustomWheel;
+import org.example.entity.BeuDuong.WheelItem;
 import org.example.enums.WheelType;
 import org.example.service.outdoor.WheelService;
 import org.springframework.http.ResponseEntity;
