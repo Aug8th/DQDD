@@ -1,4 +1,4 @@
-package org.example.repository.indoor;
+package org.example.repository;
 
 import org.example.entity.indoor.UserNotification;
 import org.springframework.data.jpa.repository.JpaRepository;

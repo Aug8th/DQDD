@@ -5,8 +5,8 @@ import org.example.dto.request.indoor.UserFridgeRequestDto;
 import org.example.dto.response.indoor.UserFridgeListResponseDto;
 import org.example.dto.response.indoor.UserFridgeResponseDto;
 import org.example.entity.indoor.UserFridge;
-import org.example.mapper.indoor.UserFridgeMapper;
-import org.example.repository.indoor.UserFridgeRepository;
+import org.example.mapper.UserFridgeMapper;
+import org.example.repository.UserFridgeRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

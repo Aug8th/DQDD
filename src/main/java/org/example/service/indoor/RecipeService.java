@@ -6,10 +6,10 @@ import org.example.dto.response.indoor.RecipeResponseDto;
 import org.example.entity.indoor.Recipe;
 import org.example.entity.indoor.RecipeIngredient;
 import org.example.entity.indoor.UserFridge;
-import org.example.mapper.indoor.RecipeMapper;
-import org.example.repository.indoor.RecipeIngredientRepository;
-import org.example.repository.indoor.RecipeRepository;
-import org.example.repository.indoor.UserFridgeRepository;
+import org.example.mapper.RecipeMapper;
+import org.example.repository.RecipeIngredientRepository;
+import org.example.repository.RecipeRepository;
+import org.example.repository.UserFridgeRepository;
 import org.example.repository.indoor.UserRepository;
 import org.springframework.stereotype.Service;
 

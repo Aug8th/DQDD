@@ -1,4 +1,4 @@
-package org.example.mapper.indoor;
+package org.example.mapper;
 
 import org.example.dto.request.indoor.UserFridgeRequestDto;
 import org.example.dto.response.indoor.UserFridgeResponseDto;

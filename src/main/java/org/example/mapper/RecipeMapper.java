@@ -1,11 +1,11 @@
-package org.example.mapper.indoor;
+package org.example.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.example.dto.request.indoor.RecipeIngredientDto;
 import org.example.dto.response.indoor.RecipeResponseDto;
 import org.example.entity.indoor.Recipe;
 import org.example.entity.indoor.RecipeIngredient;
-import org.example.repository.indoor.RecipeIngredientRepository;
+import org.example.repository.RecipeIngredientRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -2,7 +2,7 @@ package org.example.controller.user.indoor;
 
 import lombok.RequiredArgsConstructor;
 import org.example.entity.indoor.UserNotification;
-import org.example.repository.indoor.UserNotificationRepository;
+import org.example.repository.UserNotificationRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
