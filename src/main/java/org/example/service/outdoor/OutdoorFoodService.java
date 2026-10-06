@@ -3,7 +3,7 @@ package org.example.service.outdoor;
 
 import lombok.RequiredArgsConstructor;
 import org.example.entity.OutdoorFood;
-import org.example.repository.OutdoorFoodRepository;
+import org.example.repository.BeuDuong.OutdoorFoodRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

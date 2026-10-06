@@ -4,7 +4,7 @@ package org.example.service.outdoor;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.outdoor.LetHangOutResponse;
 import org.example.entity.Location;
-import org.example.repository.LocationRepository;
+import org.example.repository.BeuDuong.LocationRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 

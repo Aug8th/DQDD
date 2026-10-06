@@ -1,4 +1,4 @@
-package org.example.repository;
+package org.example.repository.BeuDuong;
 
 import org.example.entity.OutdoorFood;
 import org.springframework.data.jpa.repository.JpaRepository;

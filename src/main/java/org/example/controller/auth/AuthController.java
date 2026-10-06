@@ -5,7 +5,7 @@ import org.example.dto.request.LoginRequest;
 import org.example.dto.request.RegisterRequest;
 import org.example.entity.common.User;
 import org.example.enums.RoleEnum;
-import org.example.repository.UserRepository;
+import org.example.repository.BeuDuong.UserRepository;
 import org.example.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

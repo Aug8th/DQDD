@@ -5,9 +5,9 @@ import org.example.entity.CustomWheel;
 import org.example.entity.WheelItem;
 import org.example.entity.WheelHistory;
 import org.example.enums.WheelType;
-import org.example.repository.CustomWheelRepository;
-import org.example.repository.WheelHistoryRepository;
-import org.example.repository.WheelItemRepository;
+import org.example.repository.BeuDuong.CustomWheelRepository;
+import org.example.repository.BeuDuong.WheelHistoryRepository;
+import org.example.repository.BeuDuong.WheelItemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
