@@ -53,3 +53,5 @@ target/
 ### Mac/Windows ###
 .DS_Store
 Thumbs.db
+
+/uploads/
