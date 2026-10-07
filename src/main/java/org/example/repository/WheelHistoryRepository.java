@@ -1,6 +1,6 @@
-package org.example.repository.BeuDuong;
+package org.example.repository;
 
-import org.example.entity.BeuDuong.WheelHistory;
+import org.example.entity.outdoor.WheelHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

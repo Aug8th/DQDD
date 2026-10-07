@@ -1,6 +1,6 @@
-package org.example.repository.BeuDuong;
+package org.example.repository;
 
-import org.example.entity.BeuDuong.OutdoorTheme;
+import org.example.entity.outdoor.OutdoorTheme;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OutdoorThemeRepository extends JpaRepository<OutdoorTheme, Integer> {

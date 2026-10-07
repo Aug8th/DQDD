@@ -2,7 +2,7 @@ package org.example.controller.outdoor;
 
 import lombok.RequiredArgsConstructor;
 import org.example.dto.outdoor.LetHangOutResponse;
-import org.example.entity.BeuDuong.Location;
+import org.example.entity.outdoor.Location;
 import org.example.service.outdoor.LocationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
