@@ -1,0 +1,112 @@
+{
+  "type": "OBJECT",
+  "properties": {
+    "answer": {
+      "type": "STRING"
+    },
+    "suggestedRecipeIds": {
+      "type": "ARRAY",
+      "items": {
+        "type": "INTEGER"
+      }
+    },
+    "generatedRecipes": {
+      "type": "ARRAY",
+      "items": {
+        "type": "OBJECT",
+        "properties": {
+          "name": {
+            "type": "STRING"
+          },
+          "description": {
+            "type": "STRING",
+            "nullable": true
+          },
+          "dishType": {
+            "type": "STRING",
+            "enum": ["MAIN_DISH", "DRINK", "DESSERT"]
+          },
+          "region": {
+            "type": "STRING",
+            "nullable": true,
+            "enum": [
+              "ASIAN",
+              "EUROPEAN",
+              "AMERICAN",
+              "AFRICAN",
+              "OCEANIAN",
+              "STREET_FOOD"
+            ]
+          },
+          "country": {
+            "type": "STRING",
+            "nullable": true
+          },
+          "prepTime": {
+            "type": "INTEGER"
+          },
+          "servings": {
+            "type": "INTEGER"
+          },
+          "difficulty": {
+            "type": "STRING",
+            "enum": ["easy", "medium", "hard"]
+          },
+          "steps": {
+            "type": "ARRAY",
+            "items": {
+              "type": "STRING"
+            }
+          },
+          "caloriesKcal": {
+            "type": "INTEGER",
+            "nullable": true
+          },
+          "cookingTip": {
+            "type": "STRING",
+            "nullable": true
+          },
+          "ingredients": {
+            "type": "ARRAY",
+            "items": {
+              "type": "OBJECT",
+              "properties": {
+                "ingredientName": {
+                  "type": "STRING",
+                  "description": "A non-empty ingredient name, at most 150 characters."
+                },
+                "quantity": {
+                  "type": "STRING",
+                  "description": "A non-empty amount and unit, at most 100 characters."
+                }
+              },
+              "required": [
+                "ingredientName",
+                "quantity"
+              ]
+            }
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "dishType",
+          "region",
+          "country",
+          "prepTime",
+          "servings",
+          "difficulty",
+          "steps",
+          "caloriesKcal",
+          "cookingTip",
+          "ingredients"
+        ]
+      }
+    }
+  },
+  "required": [
+    "answer",
+    "suggestedRecipeIds",
+    "generatedRecipes"
+  ]
+}

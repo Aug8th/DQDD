@@ -56,7 +56,7 @@ public class Recipe {
 
     private Integer servings;
 
-    @Column(columnDefinition = "enum('dễ','trung bình','khó')")
+    @Column(columnDefinition = "enum('easy','medium','hard')")
     private String difficulty;
 
     @Column(columnDefinition = "TEXT")
