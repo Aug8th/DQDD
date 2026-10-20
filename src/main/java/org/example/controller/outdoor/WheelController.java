@@ -14,6 +14,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/outdoor/wheels")
+@CrossOrigin(origins = "http://localhost:5173")
 public class WheelController {
 
     private final WheelService wheelService;

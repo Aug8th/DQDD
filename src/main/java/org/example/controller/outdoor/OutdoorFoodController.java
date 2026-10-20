@@ -12,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/outdoor/foods")
+@CrossOrigin(origins = "http://localhost:5173")
 public class OutdoorFoodController {
 
     private final OutdoorFoodService outdoorFoodService;

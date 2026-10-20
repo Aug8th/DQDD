@@ -1,5 +1,6 @@
 package org.example.entity.outdoor;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -22,6 +23,7 @@ public class Location {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "food_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // <-- Thêm dòng này vào đây
     private OutdoorFood food;
 
     @Column(nullable = false)
