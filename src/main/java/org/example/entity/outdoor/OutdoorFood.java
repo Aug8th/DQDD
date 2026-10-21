@@ -23,4 +23,8 @@ public class OutdoorFood {
     @Column(nullable = false)
     private String name;
 
+    @Column(name = "image_url", length = 1000)
+    private String imageUrl;
+
+
 }
