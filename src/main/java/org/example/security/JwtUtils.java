@@ -11,22 +11,23 @@ import java.util.Date;
 @Component
 public class JwtUtils {
     private final String jwtSecret = "foodappsecretkeymustbesufficientlylongandsecure123456789";
-
     private final int jwtExpirationMs = 86400000;
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
+    // Hàm tạo JWT Token từ UserDetails
     public String generateJwtToken(UserDetails userDetails) {
         return Jwts.builder()
-                .setSubject(userDetails.getUsername()) // Username chính là email của User
+                .setSubject(userDetails.getUsername()) // Username chính là email
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
+    // Lấy Username (email) từ JWT Token
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -36,6 +37,7 @@ public class JwtUtils {
                 .getSubject();
     }
 
+    // Kiểm tra tính hợp lệ của JWT Token
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(authToken);

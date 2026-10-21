@@ -9,10 +9,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component; // <--- 1. IMPORT THƯ VIỆN NÀY
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Component // <--- 2. THẮT ANNOTATION NÀY VÀO ĐỂ SPRING QUẢN LÝ BEAN
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Autowired
