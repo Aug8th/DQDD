@@ -8,8 +8,8 @@ import org.example.entity.chatbot.AiRecipeIngredient;
 
 import java.util.List;
 
-@lombok.experimental.UtilityClass
-public class AiRecipeMapper {
+public final class AiRecipeMapper {
+    private AiRecipeMapper() {}
 
 
 
@@ -76,7 +76,8 @@ public class AiRecipeMapper {
                 recipe.getPublishedRecipe() != null && recipe.getPublishedRecipe().isRecommended(),
                 recipe.getCaloriesKcal(),
                 recipe.getCookingTip(),
-                RecipeSteps.fromInstructions(recipe.getInstructions())
+                RecipeSteps.fromInstructions(recipe.getInstructions()),
+                recipe.getUser() == null ? null : recipe.getUser().getId()
         );
     }
 }

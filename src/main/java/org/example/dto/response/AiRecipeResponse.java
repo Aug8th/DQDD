@@ -24,6 +24,7 @@ public record AiRecipeResponse(
         boolean recommended,
         Integer caloriesKcal,
         String cookingTip,
-        java.util.List<String> steps
+        java.util.List<String> steps,
+        Integer userId
 ) {
 }

@@ -27,10 +27,13 @@ public class User {
     @Column(name = "auth_provider", columnDefinition = "enum('local','google')")
     private String authProvider;
 
+    @Column(name = "google_sub", length = 255, unique = true)
+    private String googleSub;
+
     @Column(columnDefinition = "enum('user','admin')")
     private String role;
 
-    @Column(name = "avatar_url")
+    @Column(name = "avatar_url", length = 500)
     private String avatarUrl;
 
     @Column(name = "is_active", nullable = false)

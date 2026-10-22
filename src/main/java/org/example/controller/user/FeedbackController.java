@@ -39,7 +39,9 @@ public class FeedbackController {
                     "Feedback userId does not match the signed-in user");
         }
 
-        var saved = feedbacks.saveAndFlush(new Feedback(user, body.rating(), body.comment()));
+        var feedback = new Feedback(user, body.rating(), body.comment());
+        feedback.setModerationStatus("approved");
+        var saved = feedbacks.saveAndFlush(feedback);
         return new FeedbackResult(saved.getId(), saved.getRating(), saved.getComment());
     }
 

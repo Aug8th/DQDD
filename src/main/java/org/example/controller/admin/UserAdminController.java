@@ -41,11 +41,11 @@ public class UserAdminController {
         }
         var user = users.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        if (!request.active() && user.getEmail().equals(auth.getName())) {
+        if (user.getEmail().equals(auth.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot lock your own account");
         }
-        if (!request.active() && "admin".equals(user.getRole())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot lock an admin account");
+        if ("admin".equalsIgnoreCase(user.getRole())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot change an admin account activation status");
         }
         user.setActive(request.active());
         return UserMapper.toResponse(user);

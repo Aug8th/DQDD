@@ -63,7 +63,7 @@ public class GeminiService {
 
         var requestFactory = new SimpleClientHttpRequestFactory();
         requestFactory.setConnectTimeout(10_000);
-        requestFactory.setReadTimeout(90_000);
+        requestFactory.setReadTimeout(180_000);
 
         this.client = RestClient.builder()
                 .baseUrl(baseUrl)
@@ -157,11 +157,23 @@ public class GeminiService {
             );
 
         } catch (RestClientException exception) {
-            log.warn("Unable to process the Gemini HTTP response.");
+            if (exception.getMostSpecificCause()
+                    instanceof java.net.SocketTimeoutException) {
+                log.warn("Gemini response timed out.");
+
+                throw new ResponseStatusException(
+                        HttpStatus.GATEWAY_TIMEOUT,
+                        "Gemini took too long to respond. Please try again later.",
+                        exception
+                );
+            }
+
+            log.error("Unable to process the Gemini HTTP response.", exception);
 
             throw new ResponseStatusException(
                     HttpStatus.BAD_GATEWAY,
-                    "Unable to read the Gemini response."
+                    "Unable to read the Gemini response.",
+                    exception
             );
         }
 

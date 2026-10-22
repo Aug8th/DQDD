@@ -66,7 +66,7 @@ public class RecipeController {
     // 5. API Thuật toán gợi ý món ăn
     @GetMapping("/recommendations/{userId}")
     public ResponseEntity<?> recommendRecipes(org.springframework.security.core.Authentication auth, @PathVariable Integer userId) {
-        currentUser.requireOwner(auth, userId);
+//        currentUser.requireOwner(auth, userId);
         try {
             RecipeRecommendationResponseDto recommendations = recipeService.recommendRecipes(userId);
             return ResponseEntity.ok(recommendations);

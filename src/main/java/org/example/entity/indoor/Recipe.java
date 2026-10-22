@@ -65,7 +65,7 @@ public class Recipe {
     @Column(name = "video_url")
     private String videoUrl;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", length = 500)
     private String imageUrl;
 
     @Column(name = "dish_type", columnDefinition = "enum('MAIN_DISH','DRINK','DESSERT')")

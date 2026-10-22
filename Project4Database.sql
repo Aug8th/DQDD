@@ -137,3 +137,83 @@ ALTER TABLE recipes
 
 ALTER TABLE feedbacks
     ADD COLUMN moderation_status ENUM('pending', 'approved') NOT NULL DEFAULT 'approved';
+
+USE food_app;
+
+-- Add only fields missing from recipes in the supplied old schema.
+ALTER TABLE recipes
+    ADD COLUMN description TEXT NULL,
+    ADD COLUMN calories_kcal INT NULL,
+    ADD COLUMN cooking_tip TEXT NULL,
+    ADD COLUMN is_recommended BOOLEAN NOT NULL DEFAULT FALSE,
+    ADD COLUMN dish_type ENUM('MAIN_DISH','DRINK','DESSERT') NOT NULL DEFAULT 'MAIN_DISH',
+    ADD COLUMN region ENUM('ASIAN','EUROPEAN','AMERICAN','AFRICAN','OCEANIAN','STREET_FOOD') NULL DEFAULT NULL,
+    ADD COLUMN country VARCHAR(100) NULL;
+
+-- Preserve and convert existing difficulty values.
+ALTER TABLE recipes MODIFY COLUMN difficulty
+    ENUM('dễ','trung bình','khó','easy','medium','hard');
+UPDATE recipes SET difficulty = CASE difficulty
+                                    WHEN 'dễ' THEN 'easy'
+                                    WHEN 'trung bình' THEN 'medium'
+                                    WHEN 'khó' THEN 'hard'
+                                    ELSE difficulty END;
+ALTER TABLE recipes MODIFY COLUMN difficulty ENUM('easy','medium','hard');
+
+-- New chatbot tables, absent from the old team schema.
+CREATE TABLE IF NOT EXISTS chat_sessions (
+                                             id INT AUTO_INCREMENT PRIMARY KEY,
+                                             user_id INT NOT NULL,
+                                             title VARCHAR(255) NOT NULL DEFAULT 'New conversation',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+CREATE TABLE IF NOT EXISTS chat_messages (
+                                             id INT AUTO_INCREMENT PRIMARY KEY,
+                                             session_id INT NOT NULL,
+                                             sender ENUM('USER','ASSISTANT') NOT NULL,
+    content MEDIUMTEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_messages_session (session_id, id),
+    FOREIGN KEY (session_id) REFERENCES chat_sessions(id) ON DELETE CASCADE
+    );
+CREATE TABLE IF NOT EXISTS ai_recipes (
+                                          id INT AUTO_INCREMENT PRIMARY KEY,
+                                          user_id INT NOT NULL,
+                                          source_message_id INT NULL,
+                                          name VARCHAR(255) NOT NULL,
+    description TEXT,
+    prep_time INT,
+    servings INT,
+    difficulty ENUM('easy', 'medium', 'hard'),
+    instructions MEDIUMTEXT NOT NULL,
+    category_id INT NULL,
+    dish_type ENUM('MAIN_DISH','DRINK','DESSERT') NOT NULL DEFAULT 'MAIN_DISH',
+    region ENUM('ASIAN','EUROPEAN','AMERICAN','AFRICAN','OCEANIAN','STREET_FOOD') NULL,
+    country VARCHAR(100) NULL,
+    image_url VARCHAR(500) NULL,
+    video_url VARCHAR(255) NULL,
+    calories_kcal INT NULL,
+    cooking_tip TEXT NULL,
+    published_recipe_id INT NULL,
+    UNIQUE KEY uq_ai_published_recipe (published_recipe_id),
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
+    FOREIGN KEY (published_recipe_id) REFERENCES recipes(id) ON DELETE SET NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_ai_recipes_user_created (user_id, created_at),
+    CHECK (prep_time IS NULL OR prep_time > 0),
+    CHECK (servings IS NULL OR servings > 0),
+    FOREIGN KEY (source_message_id) REFERENCES chat_messages(id) ON DELETE SET NULL
+    );
+CREATE TABLE IF NOT EXISTS ai_recipe_ingredients (
+                                                     id INT AUTO_INCREMENT PRIMARY KEY,
+                                                     ai_recipe_id INT NOT NULL,
+                                                     ingredient_name VARCHAR(150) NOT NULL,
+    quantity VARCHAR(100),
+    FOREIGN KEY (ai_recipe_id) REFERENCES ai_recipes(id) ON DELETE CASCADE
+    );
+
+ALTER TABLE users ADD COLUMN google_sub VARCHAR(255) NULL,
+    ADD UNIQUE KEY uq_users_google_sub (google_sub);

@@ -14,6 +14,9 @@ public record RecipeAdminRequest(
         java.util.List<RecipeIngredientRequest> ingredients,
         String description,
         Integer caloriesKcal,
-        String cookingTip
+        String cookingTip,
+        String imageUrl,
+        String approvalStatus,
+        Boolean recommended
 ) {
 }
