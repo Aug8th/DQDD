@@ -27,6 +27,7 @@ public class User {
     @Column(name = "auth_provider", columnDefinition = "enum('local','google')")
     private String authProvider;
 
+
     @Column(columnDefinition = "enum('user','admin')")
     private String role;
 
@@ -38,5 +39,15 @@ public class User {
 
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "reset_otp")
+    private String resetOtp;
+
+    @Column(name = "otp_expiry_date")
+    private LocalDateTime otpExpiryDate;
+
+    @Column(name = "google_sub")
+    private String googleSub;
+
 
 }
