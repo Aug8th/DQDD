@@ -33,4 +33,23 @@ public class EmailService {
             log.warn("Could not send expiry email ({})", ex.getClass().getSimpleName());
         }
     }
+    public void sendAuthenticationCode(String recipient, String subject, String content) {
+        var sender = senders.getIfAvailable();
+        if (!enabled || sender == null) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE,
+                    "Email delivery is not configured. Enable EMAIL_ENABLED and configure mail settings");
+        }
+        var mail = new SimpleMailMessage();
+        if (!from.isBlank()) mail.setFrom(from);
+        mail.setTo(recipient);
+        mail.setSubject(subject);
+        mail.setText(content);
+        try { sender.send(mail); }
+        catch (org.springframework.mail.MailException ex) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE,
+                    "Unable to send verification email. Please try again later");
+        }
+    }
 }

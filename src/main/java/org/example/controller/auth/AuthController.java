@@ -56,24 +56,6 @@ public class AuthController {
         return response(users.findByEmail(email).orElseThrow());
     }
 
-    @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public AuthResponse register(@RequestBody Credentials body) {
-        String email = email(body == null ? null : body.email());
-        if (body.password() == null || body.password().length() < 8
-                || body.password().getBytes(StandardCharsets.UTF_8).length > 72) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must have at least 8 characters and at most 72 UTF-8 bytes");
-        }
-        if (users.existsByEmail(email)) throw conflict();
-        var user = new User();
-        user.setEmail(email);
-        user.setPasswordHash(passwords.encode(body.password()));
-        user.setAuthProvider("local");
-        user.setRole("user");
-        user.setActive(true);
-        return response(save(user));
-    }
-
     @PostMapping("/google")
     public AuthResponse google(@RequestBody GoogleRequest body) {
         var identity = google.verify(body == null ? null : body.credential());
@@ -120,5 +102,12 @@ public class AuthController {
 
     public record Credentials(String email, String password) {}
     public record GoogleRequest(String credential) {}
-    public record AuthResponse(String accessToken, String tokenType, UserResponse user) {}
+    public record AuthResponse(String accessToken, String tokenType, UserResponse user) {
+        @com.fasterxml.jackson.annotation.JsonProperty("token")
+        public String token() { return accessToken; }
+        @com.fasterxml.jackson.annotation.JsonProperty("id")
+        public Integer id() { return user.id(); }
+        @com.fasterxml.jackson.annotation.JsonProperty("email")
+        public String email() { return user.email(); }
+    }
 }

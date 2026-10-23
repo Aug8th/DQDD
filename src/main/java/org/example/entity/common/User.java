@@ -42,4 +42,10 @@ public class User {
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "reset_otp")
+    private String resetOtp;
+
+    @Column(name = "otp_expiry_date")
+    private LocalDateTime otpExpiryDate;
+
 }

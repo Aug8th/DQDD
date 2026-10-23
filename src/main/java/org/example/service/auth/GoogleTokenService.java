@@ -16,7 +16,7 @@ public class GoogleTokenService {
     private final JwtDecoder decoder;
 
     @Autowired
-    public GoogleTokenService(@Value("${app.google.client-id:${GOOGLE_CLIENT_ID:}}") String clientId) {
+    public GoogleTokenService(@Value("${app.google.client-id:${spring.security.oauth2.client.registration.google.client-id:${GOOGLE_CLIENT_ID:}}}") String clientId) {
         this(clientId, NimbusJwtDecoder
                 .withJwkSetUri("https://www.googleapis.com/oauth2/v3/certs")
                 .jwsAlgorithm(SignatureAlgorithm.RS256).build());
