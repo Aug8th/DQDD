@@ -16,6 +16,7 @@ public class UserMapper {
                 u.getRole(),
                 u.getAvatarUrl(),
                 u.isActive(),
+                u.isAdminOwner(),
                 u.getCreatedAt()
         );
     }

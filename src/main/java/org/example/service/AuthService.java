@@ -134,7 +134,13 @@ public class AuthService {
     }
 
     private AuthResponse response(User user) {
-        return new AuthResponse(jwtUtils.generateForEmail(user.getEmail()), user.getId().longValue(), user.getEmail());
+        return new AuthResponse(
+                jwtUtils.generateForEmail(user.getEmail()),
+                user.getId().longValue(),
+                user.getEmail(),
+                user.getRole(),
+                user.isAdminOwner()
+        );
     }
 
     private User find(String email) {

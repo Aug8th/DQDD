@@ -73,6 +73,14 @@ public class AiRecipeStorageService {
 
             recipe.setCaloriesKcal(generated.caloriesKcal());
             recipe.setCookingTip(generated.cookingTip());
+            // Use a real YouTube search URL instead of letting the model invent a video URL.
+            String videoQuery = java.net.URLEncoder.encode(
+                    generated.name().trim() + " hướng dẫn nấu ăn",
+                    java.nio.charset.StandardCharsets.UTF_8
+            );
+            recipe.setVideoUrl("https://www.youtube.com/results?search_query=" + videoQuery);
+            // imageUrl stays null until a real image-generation/search provider is configured.
+            // Never store a fabricated image URL from the language model.
             recipe.setDishType(generated.dishType());
             recipe.setRegion(generated.region());
             recipe.setCountry(

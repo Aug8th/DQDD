@@ -1,18 +1,27 @@
 package org.example.controller.admin;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
 import org.example.dto.request.RecipeReviewRequest;
+import org.example.dto.request.RegisterRequest;
 import org.example.dto.response.RecipeResponse;
 import org.example.dto.response.UserResponse;
+import org.example.entity.common.User;
 import org.example.mapper.RecipeMapper;
 import org.example.mapper.UserMapper;
 import org.example.repository.RecipeRepository;
 import org.example.repository.UserRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,47 +31,160 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
+
     private final UserRepository users;
     private final RecipeRepository recipes;
+    private final PasswordEncoder passwordEncoder;
 
-    public AdminController(UserRepository users, RecipeRepository recipes) {
+    public AdminController(
+            UserRepository users,
+            RecipeRepository recipes,
+            PasswordEncoder passwordEncoder
+    ) {
         this.users = users;
         this.recipes = recipes;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/users")
     public List<UserResponse> users() {
-        return users.findAll().stream().map(UserMapper::toResponse).toList();
+        return users.findAll().stream()
+                .map(UserMapper::toResponse)
+                .toList();
+    }
+
+    @PostMapping("/admins")
+    @Transactional
+    public ResponseEntity<UserResponse> createAdmin(
+            Authentication authentication,
+            @RequestBody RegisterRequest request
+    ) {
+        requireAdminOwner(authentication);
+
+        if (request == null
+                || request.getEmail() == null
+                || request.getPassword() == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Email and password are required"
+            );
+        }
+
+        String email = request.getEmail()
+                .trim()
+                .toLowerCase(Locale.ROOT);
+
+        if (!EMAIL_PATTERN.matcher(email).matches()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Enter a valid email address"
+            );
+        }
+
+        String password = request.getPassword();
+        if (password.length() < 8
+                || password.getBytes(StandardCharsets.UTF_8).length > 72) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Password must contain at least 8 characters and at most 72 UTF-8 bytes"
+            );
+        }
+
+        if (users.existsByEmail(email)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Email is already registered"
+            );
+        }
+
+        User admin = new User();
+        admin.setEmail(email);
+        admin.setPasswordHash(passwordEncoder.encode(password));
+        admin.setAuthProvider("local");
+        admin.setRole("admin");
+        admin.setActive(true);
+        admin.setAdminOwner(false);
+
+        User saved = users.save(admin);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(UserMapper.toResponse(saved));
+    }
+
+    private void requireAdminOwner(Authentication authentication) {
+        boolean isOwner = authentication != null
+                && authentication.getName() != null
+                && users.findByEmail(authentication.getName())
+                .filter(user ->
+                        "admin".equals(user.getRole())
+                                && user.isAdminOwner())
+                .isPresent();
+
+        if (!isOwner) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Only the admin owner can create admin accounts"
+            );
+        }
     }
 
     @GetMapping("/recipes/submissions")
     @Transactional(readOnly = true)
-    public List<RecipeResponse> submissions(@RequestParam(required = false) String status) {
-        if (status != null && !List.of("pending", "approved", "rejected").contains(status)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid status");
+    public List<RecipeResponse> submissions(
+            @RequestParam(required = false) String status
+    ) {
+        if (status != null
+                && !List.of("pending", "approved", "rejected").contains(status)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid status"
+            );
         }
 
         var items = status == null
                 ? recipes.findBySubmittedByIsNotNullOrderByCreatedAtDesc()
                 : recipes.findBySubmittedByIsNotNullAndApprovalStatusOrderByCreatedAtDesc(status);
-        return items.stream().map(RecipeMapper::toResponse).toList();
+
+        return items.stream()
+                .map(RecipeMapper::toResponse)
+                .toList();
     }
 
     @Transactional
     @PatchMapping("/recipes/{id}/approval")
-    public RecipeResponse review(@PathVariable Integer id, @RequestBody RecipeReviewRequest body) {
-        if (body == null || body.status() == null
+    public RecipeResponse review(
+            @PathVariable Integer id,
+            @RequestBody RecipeReviewRequest body
+    ) {
+        if (body == null
+                || body.status() == null
                 || !List.of("approved", "rejected").contains(body.status())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Use approved or rejected");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Use approved or rejected"
+            );
         }
 
         var recipe = recipes.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found"));
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Recipe not found"
+                        ));
+
         if (recipe.getSubmittedBy() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not a user submission");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Not a user submission"
+            );
         }
+
         if (!"pending".equals(recipe.getApprovalStatus())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Already reviewed");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Already reviewed"
+            );
         }
 
         recipe.setApprovalStatus(body.status());

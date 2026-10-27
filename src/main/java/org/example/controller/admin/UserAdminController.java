@@ -9,6 +9,7 @@ import org.example.dto.response.UserResponse;
 import org.example.mapper.UserMapper;
 import org.example.repository.UserFridgeRepository;
 import org.example.repository.UserRepository;
+import org.example.service.AdminAuthorizationService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -26,27 +27,58 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserAdminController {
     private final UserRepository users;
     private final UserFridgeRepository fridges;
+    private final AdminAuthorizationService adminAuthorization;
 
-    public UserAdminController(UserRepository users, UserFridgeRepository fridges) {
+    public UserAdminController(
+            UserRepository users,
+            UserFridgeRepository fridges,
+            AdminAuthorizationService adminAuthorization
+    ) {
         this.users = users;
         this.fridges = fridges;
+        this.adminAuthorization = adminAuthorization;
     }
 
     @PatchMapping("/users/{id}/active")
     @Transactional
-    public UserResponse setActive(Authentication auth, @PathVariable Integer id,
-                                  @RequestBody UserActiveRequest request) {
+    public UserResponse setActive(
+            Authentication auth,
+            @PathVariable Integer id,
+            @RequestBody UserActiveRequest request
+    ) {
         if (request == null || request.active() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "active is required");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "active is required"
+            );
         }
+
         var user = users.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        if (user.getEmail().equals(auth.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot lock your own account");
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "User not found"
+                        ));
+
+        if (!request.active()
+                && user.getEmail().equalsIgnoreCase(auth.getName())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Cannot lock your own account"
+            );
         }
-        if ("admin".equalsIgnoreCase(user.getRole())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot change an admin account activation status");
+
+        if ("admin".equals(user.getRole())) {
+            adminAuthorization.requireAdminOwner(auth);
+
+            if (user.isAdminOwner()) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Cannot change the owner account status"
+                );
+            }
         }
+
         user.setActive(request.active());
         return UserMapper.toResponse(user);
     }
@@ -59,8 +91,11 @@ public class UserAdminController {
                 .topIngredients(PageRequest.of(0, 10))
                 .stream()
                 .map(item -> new FridgeStatsResponse.IngredientCount(
-                        item.getIngredientName(), item.getItemCount()))
+                        item.getIngredientName(),
+                        item.getItemCount()
+                ))
                 .toList();
+
         return new FridgeStatsResponse(
                 fridges.count(),
                 fridges.countByStorageType("COOLER"),

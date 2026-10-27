@@ -9,6 +9,7 @@ public record UserResponse(
         String role,
         String avatarUrl,
         boolean active,
+        boolean adminOwner,
         LocalDateTime createdAt
 ) {
 }

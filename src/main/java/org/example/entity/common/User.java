@@ -39,6 +39,9 @@ public class User {
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
 
+    @Column(name = "is_admin_owner", nullable = false, columnDefinition = "boolean not null default false")
+    private boolean adminOwner = false;
+
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
